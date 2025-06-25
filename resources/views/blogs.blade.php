@@ -97,7 +97,7 @@
                             <form action="#">
                                 <input type="text" placeholder="Name">
                                 <input type="text" placeholder="Email">
-                                <button type="submit" class="site-btn">Subscribe</button>
+                                <button type="button" class="site-btn">Subscribe</button>
                             </form>
                         </div>
 
@@ -124,3 +124,51 @@
     </section>
 
 @endsection
+
+<!-- @push('scripts')
+<script src="https://cdn.cinetpay.com/seamless/main.js" type="text/javascript"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        window.checkout = function () {
+            CinetPay.setConfig({
+                apikey: '5005416896851aa050c02d2.52968285',
+                site_id: 105898673,
+                notify_url: 'https://mondomaine.com/notify/',
+                mode: 'PRODUCTION'
+            });
+
+            CinetPay.getCheckout({
+                transaction_id: Math.floor(Math.random() * 100000000).toString(),
+                amount: 1000,
+                currency: 'XOF',
+                channels: 'ALL',
+                description: 'Test de paiement',
+                customer_name: "Joe",
+                customer_surname: "Down",
+                customer_email: "down@test.com",
+                customer_phone_number: "088767611",
+                customer_address: "BP 0024",
+                customer_city: "Antananarivo",
+                customer_country: "CM",
+                customer_state: "CM",
+                customer_zip_code: "06510",
+            });
+
+            CinetPay.waitResponse(function(data) {
+                if (data.status === "REFUSED") {
+                    alert("Votre paiement a échoué");
+                    window.location.reload();
+                } else if (data.status === "ACCEPTED") {
+                    alert("Votre paiement a été effectué avec succès");
+                    window.location.reload();
+                }
+            });
+
+            CinetPay.onError(function(data) {
+                console.error("Erreur CinetPay :", data);
+            });
+        };
+    });
+</script>
+@endpush -->
+

@@ -17,6 +17,7 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Storage; 
 
 class VideoResource extends Resource
 {
@@ -30,9 +31,18 @@ class VideoResource extends Resource
             ->schema([
                 TextInput::make('title')->required(),
                 FileUpload::make('video_file')
-                    ->maxSize(102400)
                     ->disk('public')
                     ->directory('videos')
+                    ->acceptedFileTypes([
+                        'video/mp4',
+                        'video/quicktime',
+                        'video/x-msvideo',
+                        'image/jpeg',
+                        'image/png',
+                        'image/webp',
+                        'image/gif',
+                    ])
+                    ->maxSize(102400) 
                     ->required(),
                 FileUpload::make('poster_image')
                     ->disk('public')

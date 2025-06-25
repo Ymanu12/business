@@ -103,8 +103,6 @@
     }
 </style>
 @endpush
-
-<br>
 <div class="breadcrumb-option">
     <div class="container">
         <div class="row">
@@ -124,7 +122,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="section-title">
-                        <h2>Dernières vidéos</h2>
+                        <h2>Latest Videos</h2>
                     </div>
                     @php
                         $videos = \App\Models\Video::where('etat', 1)->orderBy('upload_date', 'desc')->get();
@@ -148,7 +146,7 @@
                                             @endphp
                                             {{ $seconds >= 3600 ? gmdate('H:i:s', $seconds) : gmdate('i:s', $seconds) }}
                                         </li>
-                                        <li> ..    {{ \Carbon\Carbon::parse($video->upload_date)->format('d M, Y') }}</li>
+                                        <li>{{ \Carbon\Carbon::parse($video->upload_date)->format('M d, Y') }}</li>
                                     </ul>
                                 </div>
                             </div>
@@ -160,13 +158,12 @@
     </section>
 </div>
 
-<!-- Conteneurs des popups vidéo -->
 @foreach($videos as $video)
 <div id="video-{{ $video->id }}" class="white-popup mfp-hide">
     <div class="video-container">
         <video controls style="width:100%; max-height:80vh;">
             <source src="{{ asset('storage/' . $video->video_file) }}" type="video/mp4">
-            Votre navigateur ne prend pas en charge la balise vidéo.
+            Your browser does not support the video tag.
         </video>
     </div>
 </div>
@@ -175,7 +172,6 @@
 @push('scripts')
 <script>
     $(document).ready(function() {
-        // Initialisation de Magnific Popup
         $('.video-popup-link').magnificPopup({
             type: 'inline',
             mainClass: 'mfp-fade',
@@ -185,7 +181,6 @@
             fixedBgPos: true,
             callbacks: {
                 beforeOpen: function() {
-                    // Pause toutes les autres vidéos
                     $('video').each(function() {
                         this.pause();
                     });
@@ -195,7 +190,7 @@
                     if(video) {
                         video.currentTime = 0;
                         video.play().catch(function(e) {
-                            console.error("Erreur de lecture:", e);
+                            console.error("Playback error:", e);
                         });
                     }
                 },
@@ -205,8 +200,7 @@
                 }
             }
         });
-        
-        // Fermeture avec la touche ESC
+
         $(document).keyup(function(e) {
             if(e.key === "Escape") {
                 $.magnificPopup.close();

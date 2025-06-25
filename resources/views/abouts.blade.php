@@ -91,27 +91,28 @@
                 <div class="col-lg-6">
                     <div class="row">
                         <div class="col-lg-4 col-md-4 col-sm-4 p-0">
-                            <img src="img/about/ap-1.jpg" alt="">
-                            <img src="img/about/ap-2.jpg" alt="">
+                            <img src="img/WhatsApp Image 2025-05-05 à 10.17.23_502fa02d.jpg" alt="">
+                            <img src="img/WhatsApp Image 2025-05-05 à 10.17.29_f6480e78.jpg" alt="">
+                            <img src="img/WhatsApp Image 2025-05-05 à 10.17.23_502fa02d.jpg" alt="">
                         </div>
                         <div class="col-lg-8 col-md-8 col-sm-8 p-0">
-                            <img src="img/about/ap-3.jpg" alt="">
+                            <img src="img/WhatsApp Image 2025-05-05 à 10.17.23_943656a0.jpg" alt="">
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-6">
                     <div class="row">
                         <div class="col-lg-8 col-md-8 col-sm-8 p-0">
-                            <img src="img/about/ap-4.jpg" alt="">
+                            <img src="img/WhatsApp Image 2025-05-05 à 10.17.31_61dbae44.jpg" alt="">
                         </div>
                         <div class="col-lg-4 col-md-4 col-sm-4 p-0">
-                            <img src="img/about/ap-5.jpg" alt="">
+                            <img src="img/WhatsApp Image 2025-05-05 à 10.17.22_c5d7f588.jpg" alt="">
                         </div>
                         <div class="col-lg-4 col-md-4 col-sm-4 p-0">
-                            <img src="img/about/ap-6.jpg" alt="">
+                            <img src="img/WhatsApp Image 2025-05-05 à 10.17.31_45dba656.jpg" alt="">
                         </div>
                         <div class="col-lg-8 col-md-8 col-sm-8 p-0">
-                            <img src="img/about/ap-7.jpg" alt="">
+                            <img src="img/about/WhatsApp Image 2025-05-05 à 10.17.31_98e3dbed.jpg" alt="">
                         </div>
                     </div>
                 </div>
@@ -134,7 +135,7 @@
             <div class="row">
                 <div class="col-lg-4 col-md-6 col-sm-6">
                     <div class="about__services__item">
-                        <div class="about__services__item__pic set-bg" data-setbg="img/services/as-1.jpg">
+                        <div class="about__services__item__pic set-bg" data-setbg="img/services/as-5.jpg">
                             <div class="icon">
                                 <img src="img/services/camera.png" alt="">
                             </div>
@@ -148,7 +149,7 @@
                 </div>
                 <div class="col-lg-4 col-md-6 col-sm-6">
                     <div class="about__services__item">
-                        <div class="about__services__item__pic set-bg" data-setbg="img/services/as-2.jpg">
+                        <div class="about__services__item__pic set-bg" data-setbg="img/services/as-4.jpg">
                             <div class="icon">
                                 <img src="img/blog/music-note.png" alt="">
                             </div>
@@ -163,7 +164,7 @@
                 </div>
                 <div class="col-lg-4 col-md-6 col-sm-6">
                     <div class="about__services__item">
-                        <div class="about__services__item__pic set-bg" data-setbg="img/services/as-3.jpg">
+                        <div class="about__services__item__pic set-bg" data-setbg="img/services/as-6.jpg">
                             <div class="icon">
                                 <img src="img/services/calendar.png" alt="">
                             </div>

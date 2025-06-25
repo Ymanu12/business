@@ -14,6 +14,8 @@ class Video extends Model
         'upload_date',
         'description',
         'etat',
+        'attachment',
+        'type',
     ];
 
     protected $casts = [
