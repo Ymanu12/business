@@ -6,12 +6,6 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ContactController;
 
-Route::get('/php-info', function () {
-    phpinfo();
-});
-
-Auth::routes();
-
     Route::get('/contact', [ContactController::class, 'showForm'])->name('contact.form');
     Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
