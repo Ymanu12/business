@@ -1,2 +1,7 @@
-# Maketsplace_de_services
-C'est un projet de vente de vente de services 
+<<<<<<< HEAD
+# Business
+
+Marketplace de services permettant aux utilisateurs d’acheter et de vendre des prestations en ligne.
+=======
+# business
+>>>>>>> 3c544da37fe8d2366d9a8439c6f18e7b2df66caf
