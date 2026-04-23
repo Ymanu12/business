@@ -26,7 +26,7 @@
     <div class="mt-6 flex gap-1 rounded-2xl border border-zinc-200 bg-stone-50 p-1 dark:bg-zinc-900 dark:border-zinc-700">
         @foreach (['info' => 'Informations', 'packages' => 'Packages', 'publish' => 'Publication'] as $key => $label)
             <button @click="tab = '{{ $key }}'"
-                    :class="tab === '{{ $key }}' ? 'bg-white shadow-sm text-zinc-950 font-semibold' : 'text-zinc-500 hover:text-zinc-700' dark:text-white"
+                    :class="tab === '{{ $key }}' ? 'bg-white shadow-sm text-zinc-950 font-semibold dark:bg-zinc-700 dark:text-white' : 'text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200'"
                     class="flex-1 rounded-xl px-4 py-2.5 text-sm transition">
                 {{ $label }}
             </button>

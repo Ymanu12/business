@@ -15,7 +15,7 @@
     {{-- Tabs --}}
     <div class="mt-6 flex gap-1 rounded-2xl border border-zinc-200 bg-stone-50 p-1 dark:bg-zinc-900 dark:border-zinc-700">
         <button wire:click="$set('tab', 'active')"
-                class="flex-1 rounded-xl px-4 py-2.5 text-sm transition {{ $tab === 'active' ? 'bg-white shadow-sm font-semibold text-zinc-950' : 'text-zinc-500 hover:text-zinc-700' }}">
+                class="flex-1 rounded-xl px-4 py-2.5 text-sm transition {{ $tab === 'active' ? 'bg-white shadow-sm font-semibold text-zinc-950 dark:bg-zinc-700 dark:text-white' : 'text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200' }}">
             En cours <span class="ml-1.5 rounded-full bg-teal-100 px-2 py-0.5 text-xs font-semibold text-teal-700">{{ $activeOrders->count() }}</span>
         </button>
         <button wire:click="$set('tab', 'history')"
