@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fiverr — Find the right freelance service</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ── Custom Properties ──────────────────────────────────────── */
+:root {
+  --green:      #1DBF73;
+  --green-dark: #19a463;
+  --dark:       #404145;
+  --darker:     #222325;
+  --gray:       #62646a;
+  --light-gray: #F5F5F5;
+  --border:     #e4e5e7;
+  --white:      #ffffff;
+  --shadow-sm:  0 2px 8px rgba(0,0,0,0.08);
+  --shadow-md:  0 4px 20px rgba(0,0,0,0.12);
+  --shadow-lg:  0 8px 40px rgba(0,0,0,0.16);
+  --radius:     4px;
+  --radius-lg:  8px;
+  --font:       'Nunito Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --nav-h:      72px;
+}
+
+/* ── Reset ───────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--font); color: var(--dark); background: var(--white); }
+a { text-decoration: none; color: inherit; }
+button { cursor: pointer; border: none; background: none; font-family: var(--font); }
+ul { list-style: none; }
+img { display: block; max-width: 100%; }
+
+/* ── Utilities ───────────────────────────────────────────────── */
+.container { max-width: 1440px; margin: 0 auto; padding: 0 24px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+
+/* ════════════════════════════════════════════════════════════════
+   1. NAVIGATION
+═══════════════════════════════════════════════════════════════ */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  height: var(--nav-h);
+  display: flex; align-items: center;
+  transition: background .25s, box-shadow .25s, border-color .25s;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+}
+.nav.scrolled {
+  background: var(--white);
+  box-shadow: var(--shadow-sm);
+  border-bottom-color: var(--border);
+}
+.nav.scrolled .nav-logo { color: var(--green); }
+.nav.scrolled .nav-link  { color: var(--dark); }
+.nav.scrolled .nav-link:hover { color: var(--green); }
+.nav.scrolled .btn-signin { color: var(--dark); border-color: var(--dark); }
+.nav.scrolled .btn-signin:hover { color: var(--green); border-color: var(--green); }
+
+.nav-inner {
+  display: flex; align-items: center; gap: 32px;
+  width: 100%; max-width: 1440px; margin: 0 auto; padding: 0 24px;
+}
+.nav-logo {
+  font-size: 26px; font-weight: 800; color: var(--white);
+  letter-spacing: -1px; flex-shrink: 0;
+  transition: color .25s;
+}
+.nav-logo span { color: var(--green); }
+
+.nav-links {
+  display: flex; align-items: center; gap: 24px;
+  margin-left: auto;
+}
+.nav-link {
+  font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.92);
+  transition: color .2s; white-space: nowrap;
+  padding-bottom: 2px;
+  border-bottom: 2px solid transparent;
+}
+.nav-link:hover { color: var(--white); border-bottom-color: var(--green); }
+
+.nav-actions { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+
+.btn-signin {
+  padding: 8px 16px; border-radius: var(--radius);
+  border: 1px solid rgba(255,255,255,0.7);
+  font-size: 14px; font-weight: 600; color: var(--white);
+  transition: background .2s, border-color .2s, color .2s;
+}
+.btn-signin:hover { background: rgba(255,255,255,0.08); border-color: var(--white); }
+
+.btn-join {
+  padding: 8px 16px; border-radius: var(--radius);
+  background: var(--green); color: var(--white);
+  font-size: 14px; font-weight: 700;
+  transition: background .2s, transform .15s, box-shadow .2s;
+  position: relative; overflow: hidden;
+}
+.btn-join:hover {
+  background: var(--green-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(29,191,115,.4);
+}
+.btn-join::after {
+  content: '';
+  position: absolute; inset: 0; border-radius: var(--radius);
+  background: rgba(255,255,255,0);
+  transition: background .3s;
+}
+.btn-join:hover::after { background: rgba(255,255,255,0.08); }
+
+/* Hamburger */
+.nav-hamburger {
+  display: none; flex-direction: column; gap: 5px;
+  padding: 4px; margin-left: auto;
+}
+.nav-hamburger span {
+  display: block; width: 22px; height: 2px;
+  background: var(--white); border-radius: 2px;
+  transition: transform .25s, opacity .25s;
+}
+
+/* Mobile menu */
+.nav-mobile {
+  display: none; position: fixed; top: var(--nav-h); left: 0; right: 0;
+  background: var(--white); border-top: 1px solid var(--border);
+  padding: 16px 24px 24px; z-index: 999;
+  flex-direction: column; gap: 4px;
+  box-shadow: var(--shadow-md);
+}
+.nav-mobile.open { display: flex; }
+.nav-mobile .nav-link { color: var(--dark); padding: 10px 0; font-size: 15px; }
+.nav-mobile .nav-link:hover { color: var(--green); border-bottom: none; }
+.nav-mobile .btn-signin { width: 100%; text-align: center; margin-top: 8px; border-color: var(--green); color: var(--green); }
+.nav-mobile .btn-join   { width: 100%; text-align: center; padding: 12px; font-size: 15px; }
+
+/* ════════════════════════════════════════════════════════════════
+   2. HERO
+═══════════════════════════════════════════════════════════════ */
+.hero {
+  position: relative; min-height: 500px;
+  display: flex; align-items: center;
+  background: linear-gradient(120deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%);
+  overflow: hidden;
+  padding: calc(var(--nav-h) + 40px) 0 60px;
+}
+
+/* Decorative blobs */
+.hero::before, .hero::after {
+  content: ''; position: absolute; border-radius: 50%;
+  pointer-events: none;
+}
+.hero::before {
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(29,191,115,.18) 0%, transparent 70%);
+  top: -100px; right: -100px;
+}
+.hero::after {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(99,102,241,.15) 0%, transparent 70%);
+  bottom: -80px; left: 20%;
+}
+
+.hero-content { position: relative; z-index: 1; max-width: 680px; }
+.hero h1 {
+  font-size: clamp(28px, 4vw, 46px);
+  font-weight: 800; color: var(--white);
+  line-height: 1.18; letter-spacing: -0.5px;
+  margin-bottom: 28px;
+}
+.hero h1 em { font-style: normal; color: var(--green); }
+
+/* Search bar */
+.search-bar {
+  display: flex; align-items: center;
+  background: var(--white); border-radius: var(--radius);
+  overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,.25);
+  margin-bottom: 20px;
+}
+.search-bar input {
+  flex: 1; border: none; outline: none;
+  padding: 0 20px; height: 52px;
+  font-size: 15px; font-family: var(--font); color: var(--dark);
+}
+.search-bar input::placeholder { color: #9fa0a6; }
+.search-bar button {
+  background: var(--green); color: var(--white);
+  padding: 0 24px; height: 52px;
+  font-size: 14px; font-weight: 700;
+  display: flex; align-items: center; gap: 8px;
+  transition: background .2s;
+  white-space: nowrap;
+}
+.search-bar button:hover { background: var(--green-dark); }
+.search-bar button svg { flex-shrink: 0; }
+
+/* Popular tags */
+.hero-tags { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.hero-tags-label {
+  font-size: 13px; color: rgba(255,255,255,0.75); font-weight: 500;
+}
+.hero-tag {
+  font-size: 12.5px; color: var(--white);
+  border: 1px solid rgba(255,255,255,0.45);
+  border-radius: 20px; padding: 4px 12px;
+  transition: background .2s, border-color .2s;
+  cursor: pointer;
+}
+.hero-tag:hover { background: rgba(255,255,255,0.12); border-color: var(--white); }
+
+/* Pro badge */
+.hero-pro {
+  position: absolute; top: calc(var(--nav-h) + 32px); right: 24px;
+  background: rgba(255,255,255,0.08); backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: var(--radius-lg); padding: 10px 16px;
+  display: flex; align-items: center; gap: 8px;
+  z-index: 2;
+}
+.hero-pro-icon {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--green); display: flex; align-items: center; justify-content: center;
+}
+.hero-pro-icon svg { color: white; }
+.hero-pro-text strong { display: block; font-size: 13px; font-weight: 700; color: white; }
+.hero-pro-text span  { font-size: 11px; color: rgba(255,255,255,.65); }
+
+/* ════════════════════════════════════════════════════════════════
+   3. TRUSTED BY
+═══════════════════════════════════════════════════════════════ */
+.trusted {
+  background: #f9f9f9; border-bottom: 1px solid var(--border);
+  padding: 18px 0;
+}
+.trusted-inner {
+  display: flex; align-items: center; gap: 32px;
+  flex-wrap: wrap; justify-content: center;
+}
+.trusted-label {
+  font-size: 14px; color: var(--gray); font-weight: 500;
+  white-space: nowrap;
+}
+.trusted-logos { display: flex; align-items: center; gap: 36px; flex-wrap: wrap; }
+.trusted-logo {
+  font-size: 20px; font-weight: 800; color: #b5b6ba;
+  letter-spacing: -0.5px; white-space: nowrap;
+  transition: color .2s; cursor: default;
+}
+.trusted-logo:hover { color: #8a8b8e; }
+.trusted-logo.fb   { font-family: 'Georgia', serif; font-weight: 900; }
+.trusted-logo.goog { letter-spacing: 0; }
+.trusted-logo.nflx { font-weight: 900; letter-spacing: 1px; font-size: 17px; }
+.trusted-logo.pg   { font-size: 18px; }
+.trusted-logo.ppal { font-size: 19px; font-style: italic; }
+
+/* ════════════════════════════════════════════════════════════════
+   4. POPULAR SERVICES
+═══════════════════════════════════════════════════════════════ */
+.section { padding: 64px 0; }
+.section-title {
+  font-size: clamp(20px, 2.5vw, 26px); font-weight: 700;
+  color: var(--darker); margin-bottom: 24px;
+}
+
+.services-scroll-wrapper { position: relative; }
+.services-track {
+  display: flex; gap: 16px;
+  overflow-x: auto; scroll-snap-type: x mandatory;
+  padding-bottom: 8px; -ms-overflow-style: none; scrollbar-width: none;
+}
+.services-track::-webkit-scrollbar { display: none; }
+
+.service-card {
+  flex: 0 0 220px; height: 300px; border-radius: var(--radius-lg);
+  overflow: hidden; position: relative; scroll-snap-align: start;
+  cursor: pointer; transition: transform .25s, box-shadow .25s;
+}
+.service-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+.service-card-bg { position: absolute; inset: 0; }
+.service-card-label {
+  position: absolute; top: 20px; left: 20px;
+  font-size: 13px; color: rgba(255,255,255,0.8); font-weight: 600;
+}
+.service-card-title {
+  position: absolute; bottom: 48px; left: 20px; right: 20px;
+  font-size: 20px; font-weight: 800; color: white;
+  line-height: 1.2;
+}
+.service-card-link {
+  position: absolute; bottom: 20px; left: 20px;
+  font-size: 13px; color: rgba(255,255,255,0.9); font-weight: 600;
+  display: flex; align-items: center; gap: 4px;
+}
+.service-card-link svg { transition: transform .2s; }
+.service-card:hover .service-card-link svg { transform: translateX(3px); }
+
+/* Gradients per category */
+.sc-logo      { background: linear-gradient(155deg, #8B5CF6 0%, #5B21B6 100%); }
+.sc-wp        { background: linear-gradient(155deg, #3B82F6 0%, #1E3A8A 100%); }
+.sc-voice     { background: linear-gradient(155deg, #EC4899 0%, #7C3AED 100%); }
+.sc-video     { background: linear-gradient(155deg, #F59E0B 0%, #B45309 100%); }
+.sc-social    { background: linear-gradient(155deg, #10B981 0%, #065F46 100%); }
+.sc-seo       { background: linear-gradient(155deg, #EF4444 0%, #991B1B 100%); }
+.sc-illus     { background: linear-gradient(155deg, #6366F1 0%, #312E81 100%); }
+.sc-transl    { background: linear-gradient(155deg, #0EA5E9 0%, #0369A1 100%); }
+
+/* Scroll arrows */
+.scroll-btn {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--white); box-shadow: var(--shadow-md);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 2; border: 1px solid var(--border);
+  color: var(--dark); transition: background .2s, color .2s;
+}
+.scroll-btn:hover { background: var(--green); color: var(--white); border-color: var(--green); }
+.scroll-btn.prev { left: -16px; }
+.scroll-btn.next { right: -16px; }
+
+/* ════════════════════════════════════════════════════════════════
+   5. FEATURE CARDS
+═══════════════════════════════════════════════════════════════ */
+.features { background: var(--light-gray); }
+.features-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px; margin-top: 32px;
+}
+.feature-card {
+  background: var(--white); border-radius: var(--radius-lg);
+  padding: 32px 28px; border: 1px solid var(--border);
+  transition: transform .25s, box-shadow .25s;
+}
+.feature-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+.feature-icon {
+  font-size: 36px; margin-bottom: 16px;
+  display: flex; align-items: center;
+}
+.feature-card h3 {
+  font-size: 17px; font-weight: 700; margin-bottom: 10px; color: var(--darker);
+}
+.feature-card p { font-size: 14px; color: var(--gray); line-height: 1.6; }
+
+/* ════════════════════════════════════════════════════════════════
+   6. GIG CARDS
+═══════════════════════════════════════════════════════════════ */
+.gigs-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px; margin-top: 8px;
+}
+.gig-card {
+  border: 1px solid var(--border); border-radius: var(--radius-lg);
+  overflow: hidden; transition: transform .25s, box-shadow .25s;
+  cursor: pointer; position: relative;
+}
+.gig-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+
+/* Heart icon */
+.gig-heart {
+  position: absolute; top: 12px; right: 12px;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(255,255,255,0.9); backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity .2s;
+  color: var(--dark); font-size: 15px;
+}
+.gig-card:hover .gig-heart { opacity: 1; }
+.gig-heart:hover { color: #e74c3c; }
+
+.gig-thumb {
+  height: 160px; position: relative; overflow: hidden;
+}
+.gig-thumb-bg { position: absolute; inset: 0; }
+
+.gt-1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+.gt-2 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+.gt-3 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+.gt-4 { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+.gt-5 { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+.gt-6 { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); }
+.gt-7 { background: linear-gradient(135deg, #fccb90 0%, #d57eeb 100%); }
+.gt-8 { background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%); }
+
+/* Mock gig thumbnail content */
+.gt-label {
+  position: absolute; bottom: 10px; left: 12px;
+  background: rgba(0,0,0,.45); color: white;
+  font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 3px;
+}
+
+.gig-body { padding: 14px; }
+.gig-seller {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+}
+.gig-avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  font-size: 12px; font-weight: 700; color: white;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.gig-seller-name {
+  font-size: 13px; font-weight: 600; color: var(--darker);
+  display: flex; align-items: center; gap: 5px;
+}
+.pro-badge {
+  background: #404145; color: #c5c6c9;
+  font-size: 9px; font-weight: 700; padding: 1px 5px;
+  border-radius: 2px; letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.gig-title {
+  font-size: 14px; color: var(--dark); line-height: 1.4;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden; margin-bottom: 10px; min-height: 40px;
+}
+.gig-rating {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 13px; margin-bottom: 10px;
+}
+.stars { color: #ffb33e; font-size: 13px; letter-spacing: -1px; }
+.rating-num { font-weight: 700; color: var(--darker); }
+.rating-count { color: var(--gray); }
+.gig-footer {
+  border-top: 1px solid var(--border); padding-top: 10px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.gig-price-label { font-size: 11px; color: var(--gray); }
+.gig-price { font-size: 16px; font-weight: 700; color: var(--darker); }
+
+/* ════════════════════════════════════════════════════════════════
+   7. FOOTER
+═══════════════════════════════════════════════════════════════ */
+.footer { background: var(--white); border-top: 1px solid var(--border); padding: 48px 0 0; }
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 24px; margin-bottom: 48px;
+}
+.footer-col h4 {
+  font-size: 13px; font-weight: 700; color: var(--darker);
+  text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 14px;
+}
+.footer-col li { margin-bottom: 9px; }
+.footer-col a {
+  font-size: 13.5px; color: var(--gray);
+  transition: color .2s;
+}
+.footer-col a:hover { color: var(--green); }
+
+.footer-bottom {
+  border-top: 1px solid var(--border);
+  padding: 18px 0; margin: 0 -24px; padding-left: 24px; padding-right: 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 12px;
+}
+.footer-logo { font-size: 20px; font-weight: 800; color: var(--darker); }
+.footer-logo span { color: var(--green); }
+.footer-copy { font-size: 12px; color: var(--gray); }
+.footer-selectors { display: flex; align-items: center; gap: 12px; }
+.footer-select {
+  padding: 6px 10px; border: 1px solid var(--border);
+  border-radius: var(--radius); font-size: 12.5px;
+  color: var(--dark); background: var(--white); cursor: pointer;
+}
+.footer-access {
+  font-size: 12px; color: var(--gray);
+  display: flex; align-items: center; gap: 5px; cursor: pointer;
+  transition: color .2s;
+}
+.footer-access:hover { color: var(--green); }
+
+/* ════════════════════════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════════════════════ */
+@media (max-width: 1100px) {
+  .gigs-grid { grid-template-columns: repeat(2, 1fr); }
+  .footer-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 768px) {
+  .nav-links, .nav-actions { display: none; }
+  .nav-hamburger { display: flex; }
+  .nav.scrolled .nav-hamburger span { background: var(--dark); }
+
+  .hero-pro { display: none; }
+  .hero h1 { font-size: 26px; }
+  .hero { padding-top: calc(var(--nav-h) + 20px); }
+
+  .gigs-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: repeat(2, 1fr); }
+  .footer-bottom { flex-direction: column; text-align: center; }
+
+  .scroll-btn { display: none; }
+  .service-card { flex: 0 0 180px; height: 240px; }
+}
+@media (max-width: 480px) {
+  .footer-grid { grid-template-columns: 1fr; }
+  .features-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════ NAV ══════════════════ -->
+<nav class="nav" id="nav" role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">fiverr<span>.</span></a>
+
+    <ul class="nav-links" role="list">
+      <li><a href="#" class="nav-link">Business</a></li>
+      <li><a href="#" class="nav-link">Explore</a></li>
+      <li><a href="#" class="nav-link">English</a></li>
+      <li><a href="#" class="nav-link">€ EUR</a></li>
+      <li><a href="#" class="nav-link">Become a Seller</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <button class="btn-signin">Sign In</button>
+      <button class="btn-join">Join</button>
+    </div>
+
+    <button class="nav-hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile menu -->
+<div class="nav-mobile" id="nav-mobile" aria-hidden="true">
+  <a href="#" class="nav-link">Business</a>
+  <a href="#" class="nav-link">Explore</a>
+  <a href="#" class="nav-link">English</a>
+  <a href="#" class="nav-link">€ EUR</a>
+  <a href="#" class="nav-link">Become a Seller</a>
+  <button class="btn-signin">Sign In</button>
+  <button class="btn-join">Join</button>
+</div>
+
+<!-- ══════════════════ HERO ══════════════════ -->
+<section class="hero" aria-label="Hero">
+  <div class="container">
+    <div class="hero-content">
+      <h1>Find the right <em>freelance</em> service,<br>right away</h1>
+
+      <div class="search-bar" role="search">
+        <input type="text" placeholder='Try "building mobile app"' aria-label="Search for services">
+        <button type="button" aria-label="Search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+          Search
+        </button>
+      </div>
+
+      <div class="hero-tags">
+        <span class="hero-tags-label">Popular:</span>
+        <a href="#" class="hero-tag">Website Design</a>
+        <a href="#" class="hero-tag">Logo</a>
+        <a href="#" class="hero-tag">WordPress</a>
+        <a href="#" class="hero-tag">SEO</a>
+        <a href="#" class="hero-tag">Illustration</a>
+        <a href="#" class="hero-tag">Voice Over</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fiverr Pro badge -->
+  <div class="hero-pro" aria-label="Fiverr Pro">
+    <div class="hero-pro-icon">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/>
+      </svg>
+    </div>
+    <div class="hero-pro-text">
+      <strong>Fiverr Pro</strong>
+      <span>Handpicked top talent</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ TRUSTED BY ══════════════════ -->
+<div class="trusted">
+  <div class="container">
+    <div class="trusted-inner">
+      <span class="trusted-label">Trusted by:</span>
+      <div class="trusted-logos">
+        <span class="trusted-logo fb">facebook</span>
+        <span class="trusted-logo goog">Google</span>
+        <span class="trusted-logo nflx">NETFLIX</span>
+        <span class="trusted-logo pg">P&amp;G</span>
+        <span class="trusted-logo ppal">PayPal</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ POPULAR SERVICES ══════════════════ -->
+<section class="section" aria-label="Popular services">
+  <div class="container">
+    <h2 class="section-title">Popular Professional Services</h2>
+
+    <div class="services-scroll-wrapper">
+      <button class="scroll-btn prev" id="prev-btn" aria-label="Scroll left">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+      </button>
+
+      <div class="services-track" id="services-track">
+        <div class="service-card sc-logo" tabindex="0">
+          <div class="service-card-bg"></div>
+          <div class="service-card-label">Design</div>
+          <div class="service-card-title">Logo Design</div>
+          <div class="service-card-link">
+            Explore
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+        <div class="service-card sc-wp" tabindex="0">
+          <div class="service-card-bg"></div>
+          <div class="service-card-label">Website</div>
+          <div class="service-card-title">WordPress</div>
+          <div class="service-card-link">
+            Explore
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+        <div class="service-card sc-voice" tabindex="0">
+          <div class="service-card-bg"></div>
+          <div class="service-card-label">Audio</div>
+          <div class="service-card-title">Voice Over</div>
+          <div class="service-card-link">
+            Explore
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+        <div class="service-card sc-video" tabindex="0">
+          <div class="service-card-bg"></div>
+          <div class="service-card-label">Video</div>
+          <div class="service-card-title">Video Explainer</div>
+          <div class="service-card-link">
+            Explore
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+        <div class="service-card sc-social" tabindex="0">
+          <div class="service-card-bg"></div>
+          <div class="service-card-label">Marketing</div>
+          <div class="service-card-title">Social Media</div>
+          <div class="service-card-link">
+            Explore
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+        <div class="service-card sc-seo" tabindex="0">
+          <div class="service-card-bg"></div>
+          <div class="service-card-label">SEO</div>
+          <div class="service-card-title">SEO &amp; Traffic</div>
+          <div class="service-card-link">
+            Explore
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+        <div class="service-card sc-illus" tabindex="0">
+          <div class="service-card-bg"></div>
+          <div class="service-card-label">Art</div>
+          <div class="service-card-title">Illustration</div>
+          <div class="service-card-link">
+            Explore
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+        <div class="service-card sc-transl" tabindex="0">
+          <div class="service-card-bg"></div>
+          <div class="service-card-label">Language</div>
+          <div class="service-card-title">Translation</div>
+          <div class="service-card-link">
+            Explore
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <button class="scroll-btn next" id="next-btn" aria-label="Scroll right">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ FEATURES ══════════════════ -->
+<section class="section features" aria-label="Features">
+  <div class="container">
+    <h2 class="section-title">Not sure where to start?</h2>
+    <p style="color:var(--gray);margin-top:-16px;margin-bottom:0;font-size:15px;">
+      Fiverr gives you access to a world-class talent pool.
+    </p>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🔍</div>
+        <h3>Browse & discover</h3>
+        <p>Browse thousands of specialized freelancers from graphic design to programming. Filter by price, delivery time, and seller level to find the perfect match.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💬</div>
+        <h3>Message sellers directly</h3>
+        <p>Not sure what you need? Chat with sellers before you buy. Get a custom offer, share your brief, and collaborate in real-time to achieve your vision.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🛡️</div>
+        <h3>Safe &amp; protected</h3>
+        <p>Your payment is released only when you're 100% satisfied. Fiverr's resolution center is always there if anything goes wrong, with 24/7 support.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ GIG CARDS ══════════════════ -->
+<section class="section" aria-label="Recommended gigs">
+  <div class="container">
+    <h2 class="section-title">You might be interested in</h2>
+
+    <div class="gigs-grid">
+
+      <!-- Gig 1 -->
+      <article class="gig-card">
+        <div class="gig-thumb">
+          <div class="gig-thumb-bg gt-1"></div>
+          <div class="gt-label">Logo Design</div>
+        </div>
+        <div class="gig-heart" aria-label="Save">♡</div>
+        <div class="gig-body">
+          <div class="gig-seller">
+            <div class="gig-avatar" style="background:#8B5CF6">KD</div>
+            <div class="gig-seller-name">kofi_designs <span class="pro-badge">Pro</span></div>
+          </div>
+          <div class="gig-title">I will design a professional minimalist logo for your business brand</div>
+          <div class="gig-rating">
+            <span class="stars">★★★★★</span>
+            <span class="rating-num">4.9</span>
+            <span class="rating-count">(2.3k)</span>
+          </div>
+          <div class="gig-footer">
+            <div><div class="gig-price-label">Starting at</div><div class="gig-price">$35</div></div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Gig 2 -->
+      <article class="gig-card">
+        <div class="gig-thumb">
+          <div class="gig-thumb-bg gt-2"></div>
+          <div class="gt-label">WordPress</div>
+        </div>
+        <div class="gig-heart" aria-label="Save">♡</div>
+        <div class="gig-body">
+          <div class="gig-seller">
+            <div class="gig-avatar" style="background:#EC4899">AM</div>
+            <div class="gig-seller-name">aisha_makes</div>
+          </div>
+          <div class="gig-title">I will build a fast, responsive WordPress website with custom design</div>
+          <div class="gig-rating">
+            <span class="stars">★★★★★</span>
+            <span class="rating-num">4.8</span>
+            <span class="rating-count">(1.8k)</span>
+          </div>
+          <div class="gig-footer">
+            <div><div class="gig-price-label">Starting at</div><div class="gig-price">$120</div></div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Gig 3 -->
+      <article class="gig-card">
+        <div class="gig-thumb">
+          <div class="gig-thumb-bg gt-3"></div>
+          <div class="gt-label">Voice Over</div>
+        </div>
+        <div class="gig-heart" aria-label="Save">♡</div>
+        <div class="gig-body">
+          <div class="gig-seller">
+            <div class="gig-avatar" style="background:#0EA5E9">TM</div>
+            <div class="gig-seller-name">tunde_mic <span class="pro-badge">Pro</span></div>
+          </div>
+          <div class="gig-title">I will record a professional voice over in English, French or Hausa</div>
+          <div class="gig-rating">
+            <span class="stars">★★★★★</span>
+            <span class="rating-num">5.0</span>
+            <span class="rating-count">(987)</span>
+          </div>
+          <div class="gig-footer">
+            <div><div class="gig-price-label">Starting at</div><div class="gig-price">$25</div></div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Gig 4 -->
+      <article class="gig-card">
+        <div class="gig-thumb">
+          <div class="gig-thumb-bg gt-4"></div>
+          <div class="gt-label">SEO</div>
+        </div>
+        <div class="gig-heart" aria-label="Save">♡</div>
+        <div class="gig-body">
+          <div class="gig-seller">
+            <div class="gig-avatar" style="background:#10B981">SA</div>
+            <div class="gig-seller-name">seo_amara</div>
+          </div>
+          <div class="gig-title">I will do complete SEO audit and keyword strategy for your website ranking</div>
+          <div class="gig-rating">
+            <span class="stars">★★★★☆</span>
+            <span class="rating-num">4.7</span>
+            <span class="rating-count">(534)</span>
+          </div>
+          <div class="gig-footer">
+            <div><div class="gig-price-label">Starting at</div><div class="gig-price">$50</div></div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Gig 5 -->
+      <article class="gig-card">
+        <div class="gig-thumb">
+          <div class="gig-thumb-bg gt-5"></div>
+          <div class="gt-label">Illustration</div>
+        </div>
+        <div class="gig-heart" aria-label="Save">♡</div>
+        <div class="gig-body">
+          <div class="gig-seller">
+            <div class="gig-avatar" style="background:#F59E0B">FO</div>
+            <div class="gig-seller-name">fatou_art <span class="pro-badge">Pro</span></div>
+          </div>
+          <div class="gig-title">I will create stunning digital illustrations and character designs</div>
+          <div class="gig-rating">
+            <span class="stars">★★★★★</span>
+            <span class="rating-num">4.9</span>
+            <span class="rating-count">(1.2k)</span>
+          </div>
+          <div class="gig-footer">
+            <div><div class="gig-price-label">Starting at</div><div class="gig-price">$80</div></div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Gig 6 -->
+      <article class="gig-card">
+        <div class="gig-thumb">
+          <div class="gig-thumb-bg gt-6"></div>
+          <div class="gt-label">Translation</div>
+        </div>
+        <div class="gig-heart" aria-label="Save">♡</div>
+        <div class="gig-body">
+          <div class="gig-seller">
+            <div class="gig-avatar" style="background:#6366F1">JB</div>
+            <div class="gig-seller-name">jean_translate</div>
+          </div>
+          <div class="gig-title">I will translate documents from French to English or Arabic professionally</div>
+          <div class="gig-rating">
+            <span class="stars">★★★★★</span>
+            <span class="rating-num">4.8</span>
+            <span class="rating-count">(766)</span>
+          </div>
+          <div class="gig-footer">
+            <div><div class="gig-price-label">Starting at</div><div class="gig-price">$20</div></div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Gig 7 -->
+      <article class="gig-card">
+        <div class="gig-thumb">
+          <div class="gig-thumb-bg gt-7"></div>
+          <div class="gt-label">Video</div>
+        </div>
+        <div class="gig-heart" aria-label="Save">♡</div>
+        <div class="gig-body">
+          <div class="gig-seller">
+            <div class="gig-avatar" style="background:#EF4444">MK</div>
+            <div class="gig-seller-name">musa_film</div>
+          </div>
+          <div class="gig-title">I will create an engaging 2D animated explainer video for your product</div>
+          <div class="gig-rating">
+            <span class="stars">★★★★☆</span>
+            <span class="rating-num">4.6</span>
+            <span class="rating-count">(342)</span>
+          </div>
+          <div class="gig-footer">
+            <div><div class="gig-price-label">Starting at</div><div class="gig-price">$150</div></div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Gig 8 -->
+      <article class="gig-card">
+        <div class="gig-thumb">
+          <div class="gig-thumb-bg gt-8"></div>
+          <div class="gt-label">Social Media</div>
+        </div>
+        <div class="gig-heart" aria-label="Save">♡</div>
+        <div class="gig-body">
+          <div class="gig-seller">
+            <div class="gig-avatar" style="background:#0EA5E9">CN</div>
+            <div class="gig-seller-name">chidinma_social <span class="pro-badge">Pro</span></div>
+          </div>
+          <div class="gig-title">I will manage your Instagram and TikTok for explosive organic growth</div>
+          <div class="gig-rating">
+            <span class="stars">★★★★★</span>
+            <span class="rating-num">4.9</span>
+            <span class="rating-count">(1.9k)</span>
+          </div>
+          <div class="gig-footer">
+            <div><div class="gig-price-label">Starting at</div><div class="gig-price">$200</div></div>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ FOOTER ══════════════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>Categories</h4>
+        <ul>
+          <li><a href="#">Graphics & Design</a></li>
+          <li><a href="#">Digital Marketing</a></li>
+          <li><a href="#">Writing & Translation</a></li>
+          <li><a href="#">Video & Animation</a></li>
+          <li><a href="#">Music & Audio</a></li>
+          <li><a href="#">Programming & Tech</a></li>
+          <li><a href="#">Business</a></li>
+          <li><a href="#">AI Services</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>About</h4>
+        <ul>
+          <li><a href="#">About Fiverr</a></li>
+          <li><a href="#">Press &amp; News</a></li>
+          <li><a href="#">Partnerships</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Intellectual Property</a></li>
+          <li><a href="#">Investor Relations</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <ul>
+          <li><a href="#">Help &amp; Support</a></li>
+          <li><a href="#">Trust &amp; Safety</a></li>
+          <li><a href="#">Selling on Fiverr</a></li>
+          <li><a href="#">Buying on Fiverr</a></li>
+          <li><a href="#">Fiverr Guides</a></li>
+          <li><a href="#">Customer Success</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Community</h4>
+        <ul>
+          <li><a href="#">Fiverr Community</a></li>
+          <li><a href="#">Events</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Podcast</a></li>
+          <li><a href="#">Affiliates</a></li>
+          <li><a href="#">Forum</a></li>
+          <li><a href="#">Invite a Friend</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>More From Fiverr</h4>
+        <ul>
+          <li><a href="#">Fiverr Pro</a></li>
+          <li><a href="#">Fiverr Business</a></li>
+          <li><a href="#">Fiverr Logo Maker</a></li>
+          <li><a href="#">Fiverr Workspace</a></li>
+          <li><a href="#">Learn — Online Courses</a></li>
+          <li><a href="#">Working Not Working</a></li>
+          <li><a href="#">ClearVoice</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+        <div class="footer-logo">fiverr<span>.</span></div>
+        <span class="footer-copy">© Fiverr International Ltd. 2024</span>
+      </div>
+      <div class="footer-selectors">
+        <button class="footer-access" aria-label="Accessibility options">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+          Accessibility
+        </button>
+        <select class="footer-select" aria-label="Select language">
+          <option>English</option>
+          <option>Français</option>
+          <option>Español</option>
+          <option>Deutsch</option>
+        </select>
+        <select class="footer-select" aria-label="Select currency">
+          <option>€ EUR</option>
+          <option>$ USD</option>
+          <option>£ GBP</option>
+          <option>XOF</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── Nav: scroll effect ─────────────────────────────────────────
+const nav = document.getElementById('nav');
+function handleScroll() {
+  if (window.scrollY > 40) {
+    nav.classList.add('scrolled');
+  } else {
+    nav.classList.remove('scrolled');
+  }
+}
+window.addEventListener('scroll', handleScroll, { passive: true });
+handleScroll();
+
+// ── Hamburger toggle ───────────────────────────────────────────
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('nav-mobile');
+let menuOpen = false;
+
+hamburger.addEventListener('click', () => {
+  menuOpen = !menuOpen;
+  mobileMenu.classList.toggle('open', menuOpen);
+  hamburger.setAttribute('aria-expanded', menuOpen);
+  mobileMenu.setAttribute('aria-hidden', !menuOpen);
+  const spans = hamburger.querySelectorAll('span');
+  if (menuOpen) {
+    spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+    spans[1].style.opacity = '0';
+    spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
+  } else {
+    spans.forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
+  }
+});
+
+// Close menu on outside click
+document.addEventListener('click', (e) => {
+  if (menuOpen && !nav.contains(e.target) && !mobileMenu.contains(e.target)) {
+    menuOpen = false;
+    mobileMenu.classList.remove('open');
+    hamburger.setAttribute('aria-expanded', false);
+    mobileMenu.setAttribute('aria-hidden', true);
+    hamburger.querySelectorAll('span').forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
+  }
+});
+
+// ── Services horizontal scroll ─────────────────────────────────
+const track = document.getElementById('services-track');
+const prevBtn = document.getElementById('prev-btn');
+const nextBtn = document.getElementById('next-btn');
+const SCROLL_AMOUNT = 240;
+
+nextBtn.addEventListener('click', () => {
+  track.scrollBy({ left: SCROLL_AMOUNT, behavior: 'smooth' });
+});
+prevBtn.addEventListener('click', () => {
+  track.scrollBy({ left: -SCROLL_AMOUNT, behavior: 'smooth' });
+});
+
+function updateScrollBtns() {
+  prevBtn.style.opacity = track.scrollLeft > 0 ? '1' : '0.3';
+  prevBtn.style.pointerEvents = track.scrollLeft > 0 ? 'auto' : 'none';
+  const atEnd = track.scrollLeft >= track.scrollWidth - track.clientWidth - 4;
+  nextBtn.style.opacity = atEnd ? '0.3' : '1';
+  nextBtn.style.pointerEvents = atEnd ? 'none' : 'auto';
+}
+track.addEventListener('scroll', updateScrollBtns, { passive: true });
+updateScrollBtns();
+
+// ── Search bar: focus effect ────────────────────────────────────
+const searchInput = document.querySelector('.search-bar input');
+const searchBar   = document.querySelector('.search-bar');
+searchInput.addEventListener('focus', () => {
+  searchBar.style.boxShadow = '0 0 0 3px rgba(29,191,115,0.35), 0 4px 24px rgba(0,0,0,.25)';
+});
+searchInput.addEventListener('blur', () => {
+  searchBar.style.boxShadow = '0 4px 24px rgba(0,0,0,.25)';
+});
+
+// ── Gig heart ──────────────────────────────────────────────────
+document.querySelectorAll('.gig-heart').forEach(h => {
+  let saved = false;
+  h.addEventListener('click', (e) => {
+    e.stopPropagation();
+    saved = !saved;
+    h.textContent = saved ? '♥' : '♡';
+    h.style.color = saved ? '#e74c3c' : '';
+  });
+});
+
+// ── Join button pulse on hover ─────────────────────────────────
+const joinBtns = document.querySelectorAll('.btn-join');
+joinBtns.forEach(btn => {
+  btn.addEventListener('mouseenter', function() {
+    this.style.animation = 'none';
+    requestAnimationFrame(() => {
+      this.style.animation = 'joinPulse 0.4s ease-out';
+    });
+  });
+});
+
+// Inject keyframes dynamically
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes joinPulse {
+    0%   { box-shadow: 0 0 0 0 rgba(29,191,115,.6); }
+    70%  { box-shadow: 0 0 0 10px rgba(29,191,115,0); }
+    100% { box-shadow: 0 0 0 0 rgba(29,191,115,0); }
+  }
+`;
+document.head.appendChild(style);
+</script>
+</body>
+</html>
