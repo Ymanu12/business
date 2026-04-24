@@ -13,7 +13,7 @@
                     <h2 class="text-base font-black text-zinc-950 dark:text-white">Choisissez votre package</h2>
                     <div class="mt-4 grid gap-3 sm:grid-cols-3">
                         @foreach ($gig->packages as $pkg)
-                            <label class="cursor-pointer rounded-2xl border p-4 transition {{ (int)$selectedPackageId === $pkg->id ? 'border-zinc-950 bg-zinc-950 text-white' : 'border-zinc-200 bg-white hover:border-teal-300' }} dark:bg-zinc-800">
+                            <label class="cursor-pointer rounded-2xl border p-4 transition {{ (int)$selectedPackageId === $pkg->id ? 'border-zinc-950 bg-zinc-950 text-white dark:border-teal-600 dark:bg-teal-700' : 'border-zinc-200 bg-white hover:border-teal-300 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-200' }}">
                                 <input type="radio" wire:model.live="selectedPackageId" value="{{ $pkg->id }}" class="sr-only">
                                 <div class="text-xs font-semibold uppercase tracking-[0.2em] {{ (int)$selectedPackageId === $pkg->id ? 'text-teal-200' : 'text-zinc-400' }}">
                                     {{ $pkg->typeLabel() }}

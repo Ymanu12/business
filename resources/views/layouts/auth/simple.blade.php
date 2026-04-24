@@ -7,7 +7,7 @@
 <body class="h-full antialiased bg-stone-50 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100">
 
     {{-- Fond dégradé AfriTask --}}
-    <div class="relative min-h-screen overflow-x-hidden bg-[radial-gradient(circle_at_top,_rgba(13,148,136,0.12),_transparent_35%),linear-gradient(180deg,_#fcfcf9_0%,_#f6f3ee_100%)]">
+    <div class="relative min-h-screen overflow-x-hidden bg-[radial-gradient(circle_at_top,_rgba(13,148,136,0.12),_transparent_35%),linear-gradient(180deg,_#fcfcf9_0%,_#f6f3ee_100%)] dark:bg-[radial-gradient(circle_at_top,_rgba(13,148,136,0.15),_transparent_35%),linear-gradient(180deg,_#18181b_0%,_#09090b_100%)]">
         <div class="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[linear-gradient(120deg,rgba(245,158,11,0.07),transparent_55%,rgba(13,148,136,0.09))]"></div>
 
         {{-- Header minimal --}}
@@ -43,7 +43,7 @@
         {{-- Contenu centré --}}
         <main class="relative flex min-h-[calc(100vh-65px)] items-center justify-center px-4 py-12">
             <div class="w-full max-w-md">
-                <div class="rounded-[2rem] border border-zinc-200/80 bg-white/95 p-8 shadow-xl shadow-zinc-900/8 backdrop-blur dark:border-zinc-700/60">
+                <div class="rounded-[2rem] border border-zinc-200/80 bg-white/95 p-8 shadow-xl shadow-zinc-900/8 backdrop-blur dark:bg-zinc-800/95 dark:border-zinc-700/60">
                     {{ $slot }}
                 </div>
             </div>

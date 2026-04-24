@@ -10,10 +10,6 @@
 
         <div class="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 lg:grid-cols-[1.15fr_0.85fr] lg:px-8 lg:py-24">
             <div class="relative">
-                <div class="inline-flex items-center gap-2 rounded-full border border-teal-200 bg-white/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.26em] text-teal-700 shadow-sm backdrop-blur dark:bg-zinc-800/80">
-                    <span class="size-2 animate-pulse rounded-full bg-amber-400"></span>
-                    Afrique freelance
-                </div>
 
                 <h1 class="mt-6 max-w-3xl text-4xl font-black leading-[1.08] tracking-tight text-zinc-950 sm:text-5xl lg:text-[3.5rem] dark:text-white">
                     Trouvez le bon freelance africain pour livrer
@@ -201,7 +197,7 @@
                     @foreach ($categories as $index => $category)
                         <a
                             href="{{ route('categories.show', $category->slug) }}"
-                            class="group rounded-[1.6rem] border border-zinc-100 bg-stone-50 p-4 transition hover:-translate-y-1 hover:border-teal-200 hover:bg-white hover:shadow-lg dark:bg-zinc-900 dark:border-zinc-800"
+                            class="group rounded-[1.6rem] border border-zinc-100 bg-stone-50 p-4 transition hover:-translate-y-1 hover:border-teal-200 hover:bg-white hover:shadow-lg dark:bg-zinc-900 dark:border-zinc-800 dark:hover:bg-zinc-800 dark:hover:border-teal-700"
                         >
                             <div class="flex size-14 items-center justify-center rounded-2xl" style="background-color: {{ ($category->color ?? '#14b8a6') }}18;">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" style="color: {{ $category->color ?? '#0f766e' }};">
@@ -277,28 +273,28 @@
                         'title' => 'Choisissez un talent',
                         'text'  => 'Portfolio, note, délai, spécialité — tout est visible avant de commander.',
                         'icon'  => '<path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/>',
-                        'color' => 'bg-teal-50 text-teal-700 ring-teal-200',
+                        'color' => 'bg-teal-50 text-teal-700 ring-teal-200 dark:bg-teal-900/30 dark:text-teal-400 dark:ring-teal-700',
                     ],
                     [
                         'step'  => '02',
                         'title' => 'Payez en escrow',
                         'text'  => 'Le paiement est réservé et libéré uniquement quand la livraison est validée.',
                         'icon'  => '<path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25z"/>',
-                        'color' => 'bg-amber-50 text-amber-700 ring-amber-200',
+                        'color' => 'bg-amber-50 text-amber-700 ring-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:ring-amber-700',
                     ],
                     [
                         'step'  => '03',
                         'title' => 'Suivez la production',
                         'text'  => 'Messagerie, révisions et statut de commande gardent le projet sous contrôle.',
                         'icon'  => '<path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"/>',
-                        'color' => 'bg-sky-50 text-sky-700 ring-sky-200',
+                        'color' => 'bg-sky-50 text-sky-700 ring-sky-200 dark:bg-sky-900/30 dark:text-sky-400 dark:ring-sky-700',
                     ],
                     [
                         'step'  => '04',
                         'title' => 'Validez & laissez un avis',
                         'text'  => 'Approuvez la livraison finale, libérez le paiement et notez le freelance.',
                         'icon'  => '<path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>',
-                        'color' => 'bg-emerald-50 text-emerald-700 ring-emerald-200',
+                        'color' => 'bg-emerald-50 text-emerald-700 ring-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400 dark:ring-emerald-700',
                     ],
                 ] as $step)
                     <article class="relative rounded-[2rem] border border-zinc-200/80 bg-white/90 p-6 shadow-lg shadow-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:border-zinc-700/60">
@@ -324,30 +320,30 @@
                     @foreach ([
                         [
                             'icon'  => '<path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25z"/>',
-                            'icolor'=> 'text-teal-700',
-                            'ibg'   => 'bg-teal-50 ring-teal-200',
+                            'icolor'=> 'text-teal-700 dark:text-teal-400',
+                            'ibg'   => 'bg-teal-50 ring-teal-200 dark:bg-teal-900/30 dark:ring-teal-700',
                             'title' => 'Paiement 100% sécurisé',
                             'text'  => "Votre argent est bloqué en escrow et libéré uniquement une fois votre livraison validée. Zéro risque.",
                             'badge' => 'Escrow',
-                            'bc'    => 'bg-teal-50 text-teal-700',
+                            'bc'    => 'bg-teal-50 text-teal-700 dark:bg-teal-900/30 dark:text-teal-400',
                         ],
                         [
                             'icon'  => '<path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.955 11.955 0 0 0 3 10.5c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.25-8.25-3.286Z"/>',
-                            'icolor'=> 'text-amber-700',
-                            'ibg'   => 'bg-amber-50 ring-amber-200',
+                            'icolor'=> 'text-amber-700 dark:text-amber-400',
+                            'ibg'   => 'bg-amber-50 ring-amber-200 dark:bg-amber-900/30 dark:ring-amber-700',
                             'title' => 'Freelances vérifiés',
                             'text'  => "Chaque professionnel passe par un processus de vérification d'identité et de compétences avant d'être visible.",
                             'badge' => 'Vérifié',
-                            'bc'    => 'bg-amber-50 text-amber-700',
+                            'bc'    => 'bg-amber-50 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
                         ],
                         [
                             'icon'  => '<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m0-10.036A11.959 11.959 0 0 1 3.598 6 11.955 11.955 0 0 0 3 10.5c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.25-8.25-3.286Z"/>',
-                            'icolor'=> 'text-sky-700',
-                            'ibg'   => 'bg-sky-50 ring-sky-200',
+                            'icolor'=> 'text-sky-700 dark:text-sky-400',
+                            'ibg'   => 'bg-sky-50 ring-sky-200 dark:bg-sky-900/30 dark:ring-sky-700',
                             'title' => 'Support & médiation 24/7',
                             'text'  => "Un litige ? Notre équipe intervient pour trouver une solution équitable entre client et freelance.",
                             'badge' => 'Support',
-                            'bc'    => 'bg-sky-50 text-sky-700',
+                            'bc'    => 'bg-sky-50 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400',
                         ],
                     ] as $benefit)
                         <div class="flex flex-col gap-4 p-8">
@@ -414,8 +410,8 @@
 
                     {{-- Client CTA --}}
                     <div class="rounded-[2rem] border border-zinc-200/80 bg-white/90 p-8 shadow-lg shadow-zinc-900/5 backdrop-blur dark:bg-zinc-800/90 dark:border-zinc-700/60">
-                        <div class="flex size-14 items-center justify-center rounded-2xl bg-teal-50 ring-1 ring-teal-200">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="size-6 text-teal-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                        <div class="flex size-14 items-center justify-center rounded-2xl bg-teal-50 ring-1 ring-teal-200 dark:bg-teal-900/30 dark:ring-teal-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="size-6 text-teal-700 dark:text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.918-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0z"/>
                             </svg>
                         </div>
@@ -452,8 +448,8 @@
                             <ul class="mt-5 grid gap-2">
                                 @foreach (['Profil vérifié et mis en avant', 'Paiements en XOF, XAF, USD', 'Messagerie & révisions intégrées'] as $perk)
                                     <li class="flex items-center gap-2.5 text-sm text-zinc-700 dark:text-zinc-300">
-                                        <span class="flex size-5 shrink-0 items-center justify-center rounded-full bg-teal-100 ring-1 ring-teal-200">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="size-3 text-teal-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                        <span class="flex size-5 shrink-0 items-center justify-center rounded-full bg-teal-100 ring-1 ring-teal-200 dark:bg-teal-900/50 dark:ring-teal-700">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="size-3 text-teal-700 dark:text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/>
                                             </svg>
                                         </span>

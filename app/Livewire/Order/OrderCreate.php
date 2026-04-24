@@ -3,7 +3,9 @@
 namespace App\Livewire\Order;
 
 use App\Enums\OrderStatus;
+use App\Events\NotificationSent;
 use App\Models\{Gig, GigPackage, Order};
+use App\Notifications\NewOrderNotification;
 use Illuminate\Contracts\View\View;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
@@ -65,6 +67,14 @@ class OrderCreate extends Component
             'status'           => OrderStatus::Pending,
             'due_date'         => now()->addDays($deliveryDays),
         ]);
+
+        $freelancer = $this->gig->freelancer;
+        $freelancer->notify(new NewOrderNotification($order));
+        broadcast(new NotificationSent(
+            $freelancer->id,
+            'Nouvelle commande reçue',
+            auth()->user()->name . ' a commandé "' . $order->title . '".',
+        ));
 
         $this->redirect(route('orders.checkout', $order->uuid), navigate: true);
     }

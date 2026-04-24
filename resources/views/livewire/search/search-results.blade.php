@@ -10,12 +10,12 @@
                     <div>
                         <label class="text-xs font-semibold text-zinc-500 uppercase tracking-[0.2em] dark:text-zinc-400">Catégorie</label>
                         <div class="mt-2 grid gap-1.5">
-                            <label class="flex items-center gap-2 cursor-pointer rounded-xl px-3 py-2 transition hover:bg-stone-50 {{ $categoryId === null ? 'bg-teal-50 text-teal-700 font-semibold' : 'text-zinc-600' }}">
+                            <label class="flex items-center gap-2 cursor-pointer rounded-xl px-3 py-2 transition hover:bg-stone-50 dark:hover:bg-zinc-700/50 {{ $categoryId === null ? 'bg-teal-50 text-teal-700 font-semibold dark:bg-teal-900/30 dark:text-teal-400' : 'text-zinc-600 dark:text-zinc-400' }}">
                                 <input type="radio" wire:model.live="categoryId" value="" class="sr-only">
                                 <span class="text-sm">Toutes</span>
                             </label>
                             @foreach ($categories as $cat)
-                                <label class="flex items-center justify-between gap-2 cursor-pointer rounded-xl px-3 py-2 transition hover:bg-stone-50 {{ (int)$categoryId === $cat->id ? 'bg-teal-50 text-teal-700 font-semibold' : 'text-zinc-600' }}">
+                                <label class="flex items-center justify-between gap-2 cursor-pointer rounded-xl px-3 py-2 transition hover:bg-stone-50 dark:hover:bg-zinc-700/50 {{ (int)$categoryId === $cat->id ? 'bg-teal-50 text-teal-700 font-semibold dark:bg-teal-900/30 dark:text-teal-400' : 'text-zinc-600 dark:text-zinc-400' }}">
                                     <input type="radio" wire:model.live="categoryId" value="{{ $cat->id }}" class="sr-only">
                                     <span class="text-sm">{{ $cat->name }}</span>
                                     <span class="text-xs text-zinc-400">{{ $cat->gigs_count }}</span>

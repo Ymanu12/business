@@ -2,7 +2,8 @@
 
 namespace App\Livewire\Order;
 
-use App\Models\{Conversation, Order};
+use App\Models\Conversation;
+use App\Models\Order;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
@@ -28,19 +29,12 @@ class OrderShow extends Component
 
     public function ouvrirChat(): void
     {
-        $authUser  = auth()->user();
-        $otherId   = $authUser->id === $this->order->client_id
+        $authUser = auth()->user();
+        $otherId = $authUser->id === $this->order->client_id
             ? $this->order->freelancer_id
             : $this->order->client_id;
 
-        $conversation = $authUser->conversations()
-            ->whereHas('users', fn ($q) => $q->where('users.id', $otherId))
-            ->first();
-
-        if (! $conversation) {
-            $conversation = Conversation::create();
-            $conversation->users()->attach([$authUser->id, $otherId]);
-        }
+        $conversation = Conversation::findOrCreateBetweenUsers($authUser->id, $otherId);
 
         $this->redirectRoute('inbox.show', $conversation->id, navigate: true);
     }

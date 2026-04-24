@@ -1,4 +1,92 @@
 <div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+
+    {{-- Bandeau de révision admin --}}
+    @if (auth()->user()?->isAdmin() && $gig->status->value === 'pending')
+        <div class="mb-8 overflow-hidden rounded-2xl border border-amber-200 bg-amber-50 dark:border-amber-800/60 dark:bg-amber-950/30">
+            <div class="flex items-center gap-3 border-b border-amber-200 bg-amber-100/60 px-5 py-3 dark:border-amber-800/40 dark:bg-amber-900/20">
+                <svg xmlns="http://www.w3.org/2000/svg" class="size-5 shrink-0 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"/>
+                </svg>
+                <p class="text-sm font-bold text-amber-800 dark:text-amber-200">
+                    Service en attente de modération — seuls les admins voient cette page
+                </p>
+                <a href="{{ route('dashboard.admin') }}" wire:navigate class="ml-auto text-xs font-semibold text-amber-700 hover:underline dark:text-amber-300">
+                    ← Retour au dashboard
+                </a>
+            </div>
+
+            <div class="p-5">
+                {{-- Approbation --}}
+                @if (! $showRejectForm)
+                    <div class="flex flex-wrap items-center gap-4">
+                        <div class="flex-1">
+                            <p class="text-sm font-semibold text-amber-900 dark:text-amber-100">Décision de modération</p>
+                            <p class="mt-0.5 text-xs text-amber-700 dark:text-amber-300">Lisez l'intégralité du contenu ci-dessous avant de valider ou rejeter.</p>
+                        </div>
+                        <div class="flex gap-3">
+                            <button
+                                wire:click="approveGig"
+                                wire:loading.attr="disabled"
+                                wire:target="approveGig"
+                                type="button"
+                                class="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-500 disabled:opacity-60"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/>
+                                </svg>
+                                <span wire:loading.remove wire:target="approveGig">Approuver & publier</span>
+                                <span wire:loading wire:target="approveGig">En cours...</span>
+                            </button>
+                            <button
+                                wire:click="$set('showRejectForm', true)"
+                                type="button"
+                                class="inline-flex items-center gap-2 rounded-xl border border-rose-300 bg-white px-5 py-2.5 text-sm font-semibold text-rose-700 transition hover:bg-rose-50 dark:border-rose-700 dark:bg-transparent dark:text-rose-400"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/>
+                                </svg>
+                                Rejeter
+                            </button>
+                        </div>
+                    </div>
+                @else
+                    {{-- Formulaire de rejet --}}
+                    <div class="space-y-3">
+                        <p class="text-sm font-semibold text-rose-800 dark:text-rose-200">Motif du rejet (visible par le freelance)</p>
+                        <textarea
+                            wire:model="rejectionReason"
+                            rows="3"
+                            placeholder="Ex : Images manquantes, description trop vague, catégorie incorrecte..."
+                            class="w-full rounded-xl border border-rose-200 bg-white px-4 py-3 text-sm text-zinc-800 outline-none transition focus:border-rose-400 focus:ring-2 focus:ring-rose-100 dark:border-rose-800 dark:bg-zinc-900 dark:text-zinc-200"
+                        ></textarea>
+                        @error('rejectionReason')
+                            <p class="text-xs text-rose-600">{{ $message }}</p>
+                        @enderror
+                        <div class="flex gap-3">
+                            <button
+                                wire:click="rejectGig"
+                                wire:loading.attr="disabled"
+                                wire:target="rejectGig"
+                                type="button"
+                                class="inline-flex items-center gap-2 rounded-xl bg-rose-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-rose-500 disabled:opacity-60"
+                            >
+                                <span wire:loading.remove wire:target="rejectGig">Confirmer le rejet</span>
+                                <span wire:loading wire:target="rejectGig">En cours...</span>
+                            </button>
+                            <button
+                                wire:click="$set('showRejectForm', false)"
+                                type="button"
+                                class="rounded-xl border border-zinc-200 bg-white px-5 py-2.5 text-sm font-semibold text-zinc-600 transition hover:bg-zinc-50 dark:border-zinc-700 dark:bg-transparent dark:text-zinc-300"
+                            >
+                                Annuler
+                            </button>
+                        </div>
+                    </div>
+                @endif
+            </div>
+        </div>
+    @endif
+
     <div class="flex flex-col gap-10 lg:flex-row lg:items-start lg:gap-10">
 
         {{-- COLONNE PRINCIPALE --}}
@@ -62,9 +150,26 @@
             {{-- Galerie --}}
             @if ($gig->gallery->isNotEmpty())
                 <div class="mt-4 flex gap-3 overflow-x-auto pb-2">
-                    @foreach ($gig->gallery as $img)
-                        <img src="{{ asset('storage/' . $img->file_path) }}" alt="Galerie"
-                             class="h-20 w-32 shrink-0 cursor-pointer rounded-xl object-cover ring-2 ring-transparent transition hover:ring-teal-400">
+                    @foreach ($gig->gallery as $item)
+                        @if ($item->type === 'video')
+                            <div class="relative h-20 w-32 shrink-0 overflow-hidden rounded-xl border border-zinc-200 bg-zinc-900 dark:border-zinc-700"
+                                 x-data
+                                 x-on:click="$refs.vid_{{ $item->id }}.paused ? $refs.vid_{{ $item->id }}.play() : $refs.vid_{{ $item->id }}.pause()">
+                                <video x-ref="vid_{{ $item->id }}"
+                                       src="{{ $item->url() }}"
+                                       class="h-full w-full cursor-pointer object-cover"
+                                       muted loop></video>
+                                <div class="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/30 transition"
+                                     x-show="$refs.vid_{{ $item->id }}?.paused !== false">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-7 text-white/80" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M8 5v14l11-7z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        @else
+                            <img src="{{ $item->url() }}" alt="Galerie"
+                                 class="h-20 w-32 shrink-0 cursor-pointer rounded-xl object-cover ring-2 ring-transparent transition hover:ring-teal-400">
+                        @endif
                     @endforeach
                 </div>
             @endif
@@ -173,7 +278,7 @@
                         <div class="flex border-b border-zinc-100 dark:border-zinc-800">
                             @foreach ($gig->packages as $i => $package)
                                 <button wire:click="$set('selectedPackageIndex', {{ $i }})"
-                                        class="flex-1 px-4 py-3 text-center text-xs font-semibold uppercase tracking-[0.2em] transition {{ $selectedPackageIndex === $i ? 'bg-zinc-950 text-white' : 'text-zinc-500 hover:bg-stone-50' }}">
+                                        class="flex-1 px-4 py-3 text-center text-xs font-semibold uppercase tracking-[0.2em] transition {{ $selectedPackageIndex === $i ? 'bg-zinc-950 text-white dark:bg-teal-700' : 'text-zinc-500 hover:bg-stone-50 dark:text-zinc-400 dark:hover:bg-zinc-700/50' }}">
                                     {{ $package->typeLabel() }}
                                 </button>
                             @endforeach

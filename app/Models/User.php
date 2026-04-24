@@ -6,7 +6,9 @@ use App\Enums\UserRole;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\{BelongsToMany, HasMany, HasOne};
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -20,7 +22,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, TwoFactorAuthenticatable, SoftDeletes;
+    use HasFactory, Notifiable, SoftDeletes, TwoFactorAuthenticatable;
 
     protected static function booted(): void
     {
@@ -29,7 +31,7 @@ class User extends Authenticatable
                 $user->uuid = (string) Str::uuid();
             }
             if (empty($user->username)) {
-                $user->username = Str::slug($user->name) . '_' . Str::random(4);
+                $user->username = Str::slug($user->name).'_'.Str::random(4);
             }
         });
     }
@@ -41,13 +43,13 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at'  => 'datetime',
-            'phone_verified_at'  => 'datetime',
-            'password'           => 'hashed',
-            'role'               => UserRole::class,
-            'is_verified'        => 'boolean',
-            'is_active'          => 'boolean',
-            'last_seen_at'       => 'datetime',
+            'email_verified_at' => 'datetime',
+            'phone_verified_at' => 'datetime',
+            'password' => 'hashed',
+            'role' => UserRole::class,
+            'is_verified' => 'boolean',
+            'is_active' => 'boolean',
+            'last_seen_at' => 'datetime',
         ];
     }
 
@@ -154,10 +156,10 @@ class User extends Authenticatable
     public function avatarUrl(): string
     {
         if ($this->avatar) {
-            return asset('storage/' . $this->avatar);
+            return asset('storage/'.$this->avatar);
         }
 
-        return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&background=1D4ED8&color=fff';
+        return 'https://ui-avatars.com/api/?name='.urlencode($this->name).'&background=1D4ED8&color=fff';
     }
 
     public function profileUrl(): string
@@ -168,9 +170,9 @@ class User extends Authenticatable
     public function getOrCreateWallet(): Wallet
     {
         return $this->wallet ?? $this->wallet()->create([
-            'balance'         => 0,
+            'balance' => 0,
             'pending_balance' => 0,
-            'currency'        => 'XOF',
+            'currency' => 'XOF',
         ]);
     }
 }

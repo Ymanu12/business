@@ -58,7 +58,7 @@
                         ];
                     @endphp
                     @foreach ($methods as $key => [$label, $desc, $available])
-                        <label class="flex cursor-pointer items-center gap-4 rounded-2xl border p-4 transition {{ $paymentMethod === $key ? 'border-zinc-950 bg-zinc-950 text-white' : 'border-zinc-200 bg-white hover:border-teal-300' }} {{ !$available ? 'opacity-50 cursor-not-allowed' : '' }} dark:bg-zinc-800">
+                        <label class="flex cursor-pointer items-center gap-4 rounded-2xl border p-4 transition {{ $paymentMethod === $key ? 'border-zinc-950 bg-zinc-950 text-white dark:border-teal-600 dark:bg-teal-700' : 'border-zinc-200 bg-white hover:border-teal-300 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-200' }} {{ !$available ? 'opacity-50 cursor-not-allowed' : '' }}">
                             <input type="radio" wire:model.live="paymentMethod" value="{{ $key }}"
                                    {{ !$available ? 'disabled' : '' }} class="sr-only">
                             <div class="flex-1">

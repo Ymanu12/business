@@ -21,10 +21,6 @@ class EnsureFreelancer
                 ->with('error', 'Cette page est réservée aux freelances.');
         }
 
-        if (! $user->hasVerifiedEmail()) {
-            return redirect()->route('verification.notice');
-        }
-
         return $next($request);
     }
 }

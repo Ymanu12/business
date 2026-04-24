@@ -10,6 +10,7 @@
         "fluxui-development",
         "livewire-development",
         "pest-testing",
+        "echo-development",
         "tailwindcss-development"
     ]
 }

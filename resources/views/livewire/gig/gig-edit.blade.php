@@ -24,7 +24,7 @@
 
     {{-- Tabs --}}
     <div class="mt-6 flex gap-1 rounded-2xl border border-zinc-200 bg-stone-50 p-1 dark:bg-zinc-900 dark:border-zinc-700">
-        @foreach (['info' => 'Informations', 'packages' => 'Packages', 'publish' => 'Publication'] as $key => $label)
+        @foreach (['info' => 'Informations', 'packages' => 'Packages', 'media' => 'Médias', 'publish' => 'Publication'] as $key => $label)
             <button @click="tab = '{{ $key }}'"
                     :class="tab === '{{ $key }}' ? 'bg-white shadow-sm text-zinc-950 font-semibold dark:bg-zinc-700 dark:text-white' : 'text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200'"
                     class="flex-1 rounded-xl px-4 py-2.5 text-sm transition">
@@ -152,6 +152,159 @@
             <div class="flex justify-end">
                 <flux:button type="submit" variant="primary">
                     Sauvegarder les packages
+                </flux:button>
+            </div>
+        </form>
+    </div>
+
+    {{-- Tab : Médias --}}
+    <div x-show="tab === 'media'" class="mt-6">
+        <form wire:submit="saveMedia" class="rounded-[2rem] border border-zinc-200/80 bg-white/90 p-6 shadow-xl shadow-zinc-900/5 backdrop-blur lg:p-8 dark:bg-zinc-800/90 dark:border-zinc-700/60">
+
+            {{-- Miniature --}}
+            <h2 class="text-lg font-black text-zinc-950 dark:text-white">Miniature du service</h2>
+            <p class="mt-1 text-xs text-zinc-500 dark:text-zinc-400">Image principale affichée dans les résultats de recherche (JPG/PNG/WebP, max 5 Mo)</p>
+
+            @if ($gig->thumbnail)
+                <div class="mt-3">
+                    <img src="{{ $gig->thumbnailUrl() }}" alt="Miniature actuelle"
+                         class="h-32 w-56 rounded-2xl object-cover border border-zinc-200 dark:border-zinc-700">
+                    <p class="mt-1 text-xs text-zinc-400">Miniature actuelle — elle sera remplacée si vous en choisissez une nouvelle.</p>
+                </div>
+            @endif
+
+            <div class="mt-3">
+                <flux:field>
+                    <flux:label>Choisir une miniature</flux:label>
+                    <input type="file" wire:model="thumbnailUpload" accept="image/*"
+                           class="mt-1 block w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-700 file:mr-3 file:cursor-pointer file:rounded-full file:border-0 file:bg-teal-600 file:px-3 file:py-1 file:text-xs file:font-semibold file:text-white hover:file:bg-teal-700 dark:bg-zinc-800/80 dark:border-zinc-700 dark:text-zinc-300">
+                    <flux:error name="thumbnailUpload" />
+                </flux:field>
+                @if ($thumbnailUpload)
+                    <p class="mt-2 text-xs text-teal-700 dark:text-teal-400">Aperçu avant enregistrement :</p>
+                    <img src="{{ $thumbnailUpload->temporaryUrl() }}" alt="Aperçu"
+                         class="mt-1 h-32 w-56 rounded-2xl object-cover border border-teal-300 dark:border-teal-600">
+                @endif
+            </div>
+
+            <div class="my-6 h-px bg-zinc-100 dark:bg-zinc-700"></div>
+
+            {{-- Vidéo --}}
+            <h2 class="text-lg font-black text-zinc-950 dark:text-white">Vidéo de présentation</h2>
+            <p class="mt-1 text-xs text-zinc-500 dark:text-zinc-400">Lien YouTube ou Vimeo pour présenter votre service (optionnel)</p>
+
+            <div class="mt-3">
+                <flux:field>
+                    <flux:label>URL de la vidéo</flux:label>
+                    <flux:input wire:model="videoUrl" type="url" placeholder="https://www.youtube.com/watch?v=..." />
+                    <flux:error name="videoUrl" />
+                </flux:field>
+            </div>
+
+            @if ($gig->video_url)
+                <p class="mt-2 text-xs text-zinc-400 dark:text-zinc-500">Vidéo actuelle : <a href="{{ $gig->video_url }}" target="_blank" class="text-teal-600 underline">{{ Str::limit($gig->video_url, 60) }}</a></p>
+            @endif
+
+            <div class="my-6 h-px bg-zinc-100 dark:bg-zinc-700"></div>
+
+            {{-- Galerie d'images --}}
+            <h2 class="text-lg font-black text-zinc-950 dark:text-white">Galerie d'images</h2>
+            <p class="mt-1 text-xs text-zinc-500 dark:text-zinc-400">Images supplémentaires montrant votre travail (JPG/PNG/WebP, max 5 Mo par image)</p>
+
+            @if ($gig->gallery->where('type', 'image')->isNotEmpty())
+                <div class="mt-4 flex flex-wrap gap-3">
+                    @foreach ($gig->gallery->where('type', 'image') as $item)
+                        <div class="group relative">
+                            <img src="{{ $item->url() }}" alt=""
+                                 class="h-28 w-44 rounded-2xl object-cover border border-zinc-200 dark:border-zinc-700">
+                            <button wire:click="removeGalleryItem({{ $item->id }})" wire:confirm="Supprimer cette image de la galerie ?"
+                                    type="button"
+                                    class="absolute -right-2 -top-2 flex size-6 items-center justify-center rounded-full bg-rose-500 text-white opacity-0 transition group-hover:opacity-100">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="size-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                                </svg>
+                            </button>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
+
+            <div class="mt-4">
+                <flux:field>
+                    <flux:label>Ajouter des images à la galerie</flux:label>
+                    <input type="file" wire:model="newGalleryImages" accept="image/*" multiple
+                           class="mt-1 block w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-700 file:mr-3 file:cursor-pointer file:rounded-full file:border-0 file:bg-teal-600 file:px-3 file:py-1 file:text-xs file:font-semibold file:text-white hover:file:bg-teal-700 dark:bg-zinc-800/80 dark:border-zinc-700 dark:text-zinc-300">
+                    <flux:error name="newGalleryImages" />
+                    <flux:error name="newGalleryImages.*" />
+                </flux:field>
+                @if (!empty($newGalleryImages))
+                    <div class="mt-3 flex flex-wrap gap-2">
+                        @foreach ($newGalleryImages as $img)
+                            <img src="{{ $img->temporaryUrl() }}" alt=""
+                                 class="h-20 w-32 rounded-xl object-cover border border-teal-300 dark:border-teal-600">
+                        @endforeach
+                    </div>
+                @endif
+            </div>
+
+            <div class="my-6 h-px bg-zinc-100 dark:bg-zinc-700"></div>
+
+            {{-- Galerie de vidéos --}}
+            <h2 class="text-lg font-black text-zinc-950 dark:text-white">Vidéos de la galerie</h2>
+            <p class="mt-1 text-xs text-zinc-500 dark:text-zinc-400">Vidéos de démonstration de votre service (MP4/MOV/WebM, max 200 Mo par vidéo, 5 vidéos max)</p>
+
+            @if ($gig->gallery->where('type', 'video')->isNotEmpty())
+                <div class="mt-4 flex flex-wrap gap-3">
+                    @foreach ($gig->gallery->where('type', 'video') as $item)
+                        <div class="group relative">
+                            <video src="{{ $item->url() }}"
+                                   class="h-28 w-44 rounded-2xl object-cover border border-zinc-200 dark:border-zinc-700 bg-zinc-900"
+                                   muted></video>
+                            <div class="pointer-events-none absolute inset-0 flex items-center justify-center rounded-2xl bg-black/30">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="size-8 text-white/80" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M8 5v14l11-7z"/>
+                                </svg>
+                            </div>
+                            <button wire:click="removeGalleryItem({{ $item->id }})" wire:confirm="Supprimer cette vidéo de la galerie ?"
+                                    type="button"
+                                    class="absolute -right-2 -top-2 flex size-6 items-center justify-center rounded-full bg-rose-500 text-white opacity-0 transition group-hover:opacity-100">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="size-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                                </svg>
+                            </button>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
+
+            <div class="mt-4">
+                <flux:field>
+                    <flux:label>Ajouter des vidéos à la galerie</flux:label>
+                    <input type="file" wire:model="newGalleryVideos" accept="video/mp4,video/quicktime,video/webm,video/x-msvideo" multiple
+                           class="mt-1 block w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-700 file:mr-3 file:cursor-pointer file:rounded-full file:border-0 file:bg-teal-600 file:px-3 file:py-1 file:text-xs file:font-semibold file:text-white hover:file:bg-teal-700 dark:bg-zinc-800/80 dark:border-zinc-700 dark:text-zinc-300">
+                    <flux:error name="newGalleryVideos" />
+                    <flux:error name="newGalleryVideos.*" />
+                </flux:field>
+                @if (!empty($newGalleryVideos))
+                    <div class="mt-3 flex flex-wrap gap-2">
+                        @foreach ($newGalleryVideos as $vid)
+                            <div class="relative h-20 w-32 overflow-hidden rounded-xl border border-teal-300 bg-zinc-900 dark:border-teal-600">
+                                <video src="{{ $vid->temporaryUrl() }}"
+                                       class="h-full w-full object-cover" muted></video>
+                                <div class="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/25">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-6 text-white/80" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M8 5v14l11-7z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
+
+            <div class="mt-6 flex justify-end">
+                <flux:button type="submit" variant="primary">
+                    Enregistrer les médias
                 </flux:button>
             </div>
         </form>

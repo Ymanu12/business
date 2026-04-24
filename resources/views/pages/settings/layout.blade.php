@@ -16,8 +16,8 @@
                     wire:navigate
                     @class([
                         'flex items-center gap-2.5 rounded-2xl px-4 py-2.5 text-sm font-semibold transition',
-                        'bg-zinc-950 text-white shadow-sm' => request()->routeIs('profile.edit'),
-                        'text-zinc-600 hover:bg-white hover:text-teal-700' => !request()->routeIs('profile.edit'),
+                        'bg-zinc-950 text-white shadow-sm dark:bg-zinc-700' => request()->routeIs('profile.edit'),
+                        'text-zinc-600 hover:bg-white hover:text-teal-700 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-teal-400' => !request()->routeIs('profile.edit'),
                     ])
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
@@ -31,8 +31,8 @@
                     wire:navigate
                     @class([
                         'flex items-center gap-2.5 rounded-2xl px-4 py-2.5 text-sm font-semibold transition',
-                        'bg-zinc-950 text-white shadow-sm' => request()->routeIs('security.edit'),
-                        'text-zinc-600 hover:bg-white hover:text-teal-700' => !request()->routeIs('security.edit'),
+                        'bg-zinc-950 text-white shadow-sm dark:bg-zinc-700' => request()->routeIs('security.edit'),
+                        'text-zinc-600 hover:bg-white hover:text-teal-700 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-teal-400' => !request()->routeIs('security.edit'),
                     ])
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
@@ -46,8 +46,8 @@
                     wire:navigate
                     @class([
                         'flex items-center gap-2.5 rounded-2xl px-4 py-2.5 text-sm font-semibold transition',
-                        'bg-zinc-950 text-white shadow-sm' => request()->routeIs('appearance.edit'),
-                        'text-zinc-600 hover:bg-white hover:text-teal-700' => !request()->routeIs('appearance.edit'),
+                        'bg-zinc-950 text-white shadow-sm dark:bg-zinc-700' => request()->routeIs('appearance.edit'),
+                        'text-zinc-600 hover:bg-white hover:text-teal-700 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-teal-400' => !request()->routeIs('appearance.edit'),
                     ])
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">

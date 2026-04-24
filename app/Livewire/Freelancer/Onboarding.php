@@ -3,7 +3,9 @@
 namespace App\Livewire\Freelancer;
 
 use App\Enums\UserRole;
+use App\Models\Conversation;
 use App\Models\FreelancerProfile;
+use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
@@ -23,6 +25,8 @@ class Onboarding extends Component
     public string $linkedinUrl = '';
 
     public string $githubUrl = '';
+
+    public ?User $adminContact = null;
 
     public function mount(): void
     {
@@ -49,6 +53,23 @@ class Onboarding extends Component
         $this->githubUrl = $profile->github_url ?? '';
     }
 
+    public function openAdminChat(): void
+    {
+        $user = auth()->user();
+
+        abort_unless($user?->isFreelancer(), 403);
+
+        $admin = $this->adminContact ?? User::query()
+            ->where('role', UserRole::Admin)
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->firstOrFail();
+
+        $conversation = Conversation::findOrCreateBetweenUsers($user->id, $admin->id);
+
+        $this->redirectRoute('inbox.show', $conversation->id, navigate: true);
+    }
+
     public function save(): void
     {
         $validated = $this->validate([
@@ -61,7 +82,7 @@ class Onboarding extends Component
             'githubUrl' => ['nullable', 'url', 'max:500'],
         ]);
 
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = auth()->user();
 
         FreelancerProfile::query()->updateOrCreate(
@@ -97,6 +118,14 @@ class Onboarding extends Component
 
     public function render(): View
     {
-        return view('livewire.freelancer.onboarding')->layout('layouts.afritask');
+        $this->adminContact = User::query()
+            ->where('role', UserRole::Admin)
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->first();
+
+        return view('livewire.freelancer.onboarding', [
+            'adminContact' => $this->adminContact,
+        ])->layout('layouts.afritask');
     }
 }

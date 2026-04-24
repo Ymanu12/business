@@ -11,6 +11,18 @@ class DashboardPage extends Component
     {
         $user = auth()->user();
 
+        if (! $user) {
+            $this->redirectRoute('login', navigate: true);
+
+            return;
+        }
+
+        if ($user?->isAdmin()) {
+            $this->redirectRoute('dashboard.admin', navigate: true);
+
+            return;
+        }
+
         if ($user?->isFreelancer()) {
             if (! $user->freelancerProfile()->exists()) {
                 $this->redirectRoute('freelancer.onboarding', navigate: true);
@@ -23,7 +35,15 @@ class DashboardPage extends Component
             return;
         }
 
-        $this->redirectRoute('dashboard.client', navigate: true);
+        if ($user->isClient()) {
+            $this->redirectRoute('dashboard.client', navigate: true);
+
+            return;
+        }
+
+        session()->flash('error', 'Votre compte ne dispose pas encore d\'un tableau de bord.');
+
+        $this->redirectRoute('home', navigate: true);
     }
 
     public function render(): View

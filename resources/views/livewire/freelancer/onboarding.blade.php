@@ -39,6 +39,23 @@
                         </div>
                     @endforeach
                 </div>
+
+                @if ($adminContact)
+                    <div class="mt-5 rounded-[1.5rem] border border-white/12 bg-white/10 p-4">
+                        <div class="text-sm font-semibold text-white">Un blocage pendant la mise en place ?</div>
+                        <p class="mt-2 text-sm leading-6 text-zinc-100/75">
+                            Ouvrez directement une discussion avec {{ $adminContact->name }} pour poser vos questions avant de publier votre premier service.
+                        </p>
+                        <button
+                            type="button"
+                            wire:click="openAdminChat"
+                            wire:loading.attr="disabled"
+                            class="mt-4 inline-flex min-h-11 items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-semibold text-zinc-950 transition hover:bg-teal-50 disabled:opacity-60"
+                        >
+                            Discuter avec l'admin
+                        </button>
+                    </div>
+                @endif
             </div>
         </div>
     </section>

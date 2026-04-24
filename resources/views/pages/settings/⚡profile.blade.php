@@ -1,10 +1,8 @@
 <?php
 
 use App\Concerns\ProfileValidationRules;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Flux\Flux;
 use Illuminate\Support\Facades\Auth;
-use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -14,6 +12,7 @@ new #[Title('Paramètres — Profil')] #[Layout('layouts.afritask')] class exten
 
     public string $name = '';
     public string $email = '';
+    public string $role = '';
 
     /**
      * Mount the component.
@@ -22,6 +21,7 @@ new #[Title('Paramètres — Profil')] #[Layout('layouts.afritask')] class exten
     {
         $this->name = Auth::user()->name;
         $this->email = Auth::user()->email;
+        $this->role = Auth::user()->role->value;
     }
 
     /**
@@ -35,44 +35,9 @@ new #[Title('Paramètres — Profil')] #[Layout('layouts.afritask')] class exten
 
         $user->fill($validated);
 
-        if ($user->isDirty('email')) {
-            $user->email_verified_at = null;
-        }
-
         $user->save();
 
         Flux::toast(variant: 'success', text: __('Profile updated.'));
-    }
-
-    /**
-     * Send an email verification notification to the current user.
-     */
-    public function resendVerificationNotification(): void
-    {
-        $user = Auth::user();
-
-        if ($user->hasVerifiedEmail()) {
-            $this->redirectIntended(default: route('dashboard', absolute: false));
-
-            return;
-        }
-
-        $user->sendEmailVerificationNotification();
-
-        Flux::toast(text: __('A new verification link has been sent to your email address.'));
-    }
-
-    #[Computed]
-    public function hasUnverifiedEmail(): bool
-    {
-        return Auth::user() instanceof MustVerifyEmail && ! Auth::user()->hasVerifiedEmail();
-    }
-
-    #[Computed]
-    public function showDeleteUser(): bool
-    {
-        return ! Auth::user() instanceof MustVerifyEmail
-            || (Auth::user() instanceof MustVerifyEmail && Auth::user()->hasVerifiedEmail());
     }
 }; ?>
 
@@ -87,19 +52,6 @@ new #[Title('Paramètres — Profil')] #[Layout('layouts.afritask')] class exten
 
             <div>
                 <flux:input wire:model="email" :label="__('Email')" type="email" required autocomplete="email" />
-
-                @if ($this->hasUnverifiedEmail)
-                    <div>
-                        <flux:text class="mt-4">
-                            {{ __('Your email address is unverified.') }}
-
-                            <flux:link class="text-sm cursor-pointer" wire:click.prevent="resendVerificationNotification">
-                                {{ __('Click here to re-send the verification email.') }}
-                            </flux:link>
-                        </flux:text>
-
-                    </div>
-                @endif
             </div>
 
             <div class="flex items-center gap-4">
@@ -109,8 +61,6 @@ new #[Title('Paramètres — Profil')] #[Layout('layouts.afritask')] class exten
             </div>
         </form>
 
-        @if ($this->showDeleteUser)
-            <livewire:pages::settings.delete-user-form />
-        @endif
+        <livewire:pages::settings.delete-user-form />
     </x-pages::settings.layout>
 </section>
