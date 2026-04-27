@@ -33,7 +33,7 @@ class Onboarding extends Component
         $user = auth()->user();
 
         if (! $user || $user->role !== UserRole::Freelancer) {
-            $this->redirectRoute('dashboard', navigate: true);
+            $this->redirectRoute('dashboard', [], false, true);
 
             return;
         }
@@ -67,7 +67,7 @@ class Onboarding extends Component
 
         $conversation = Conversation::findOrCreateBetweenUsers($user->id, $admin->id);
 
-        $this->redirectRoute('inbox.show', $conversation->id, navigate: true);
+        $this->redirectRoute('inbox.show', ['conversation' => $conversation->id], false, true);
     }
 
     public function save(): void
@@ -100,7 +100,7 @@ class Onboarding extends Component
 
         session()->flash('success', 'Votre profil freelance est pret. Vous pouvez maintenant publier votre premier service.');
 
-        $this->redirectRoute('seller.gigs.create', navigate: true);
+        $this->redirectRoute('seller.gigs.create', [], false, true);
     }
 
     /**

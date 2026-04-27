@@ -14,13 +14,13 @@ class FreelancerDashboard extends Component
         $user = auth()->user();
 
         if (! $user?->isFreelancer()) {
-            $this->redirectRoute('dashboard', navigate: true);
+            $this->redirectRoute('dashboard', [], false, true);
 
             return;
         }
 
         if (! $user->freelancerProfile()->exists()) {
-            $this->redirectRoute('freelancer.onboarding', navigate: true);
+            $this->redirectRoute('freelancer.onboarding', [], false, true);
         }
     }
 
@@ -46,14 +46,14 @@ class FreelancerDashboard extends Component
         );
 
         $profile = $user->freelancerProfile;
-        $wallet  = $user->getOrCreateWallet();
+        $wallet = $user->getOrCreateWallet();
 
         return view('livewire.dashboard.freelancer-dashboard', [
-            'activeOrders'      => $activeOrders,
+            'activeOrders' => $activeOrders,
             'activeOrdersCount' => $activeOrders->count(),
-            'urgentCount'       => $urgentOrders->count(),
-            'profile'           => $profile,
-            'wallet'            => $wallet,
+            'urgentCount' => $urgentOrders->count(),
+            'profile' => $profile,
+            'wallet' => $wallet,
         ])->layout('layouts.afritask');
     }
 }

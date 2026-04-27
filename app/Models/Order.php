@@ -103,6 +103,11 @@ class Order extends Model
         return $this->hasOne(Dispute::class);
     }
 
+    public function clientEvaluation(): HasOne
+    {
+        return $this->hasOne(ClientEvaluation::class);
+    }
+
     // ── Scopes ────────────────────────────────────────────────────
 
     public function scopeActive($query)

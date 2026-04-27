@@ -149,18 +149,16 @@
 
             {{-- Galerie --}}
             @if ($gig->gallery->isNotEmpty())
-                <div class="mt-4 flex gap-3 overflow-x-auto pb-2">
+                <div class="mt-4 flex gap-3 overflow-x-auto pb-2"
+                     x-data="{ lbSrc: null, lbType: null }">
                     @foreach ($gig->gallery as $item)
                         @if ($item->type === 'video')
-                            <div class="relative h-20 w-32 shrink-0 overflow-hidden rounded-xl border border-zinc-200 bg-zinc-900 dark:border-zinc-700"
-                                 x-data
-                                 x-on:click="$refs.vid_{{ $item->id }}.paused ? $refs.vid_{{ $item->id }}.play() : $refs.vid_{{ $item->id }}.pause()">
-                                <video x-ref="vid_{{ $item->id }}"
-                                       src="{{ $item->url() }}"
-                                       class="h-full w-full cursor-pointer object-cover"
-                                       muted loop></video>
-                                <div class="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/30 transition"
-                                     x-show="$refs.vid_{{ $item->id }}?.paused !== false">
+                            <div class="relative h-20 w-32 shrink-0 cursor-pointer overflow-hidden rounded-xl border border-zinc-200 bg-zinc-900 transition hover:ring-2 hover:ring-teal-400 dark:border-zinc-700"
+                                 x-on:click="lbSrc = '{{ $item->url() }}'; lbType = 'video'">
+                                <video src="{{ $item->url() }}"
+                                       class="pointer-events-none h-full w-full object-cover"
+                                       muted preload="metadata"></video>
+                                <div class="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/30">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="size-7 text-white/80" viewBox="0 0 24 24" fill="currentColor">
                                         <path d="M8 5v14l11-7z"/>
                                     </svg>
@@ -168,9 +166,42 @@
                             </div>
                         @else
                             <img src="{{ $item->url() }}" alt="Galerie"
-                                 class="h-20 w-32 shrink-0 cursor-pointer rounded-xl object-cover ring-2 ring-transparent transition hover:ring-teal-400">
+                                 class="h-20 w-32 shrink-0 cursor-pointer rounded-xl object-cover ring-2 ring-transparent transition hover:ring-teal-400"
+                                 x-on:click="lbSrc = '{{ $item->url() }}'; lbType = 'image'">
                         @endif
                     @endforeach
+
+                    {{-- Lightbox --}}
+                    <template x-teleport="body">
+                        <div x-show="lbSrc !== null"
+                             x-cloak
+                             x-on:keydown.escape.window="lbSrc = null"
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0"
+                             x-transition:enter-end="opacity-100"
+                             x-transition:leave="transition ease-in duration-150"
+                             x-transition:leave-start="opacity-100"
+                             x-transition:leave-end="opacity-0"
+                             class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/85 p-4 backdrop-blur-sm"
+                             x-on:click.self="lbSrc = null">
+                            <div class="relative w-full max-w-4xl">
+                                <button x-on:click="lbSrc = null"
+                                        class="absolute -top-10 right-0 flex size-8 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                                    </svg>
+                                </button>
+                                <template x-if="lbType === 'video'">
+                                    <video :src="lbSrc" controls autoplay
+                                           class="max-h-[80vh] w-full rounded-2xl bg-black shadow-2xl"></video>
+                                </template>
+                                <template x-if="lbType === 'image'">
+                                    <img :src="lbSrc" alt=""
+                                         class="max-h-[80vh] w-full rounded-2xl object-contain shadow-2xl">
+                                </template>
+                            </div>
+                        </div>
+                    </template>
                 </div>
             @endif
 

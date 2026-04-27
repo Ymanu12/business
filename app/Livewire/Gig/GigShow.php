@@ -3,7 +3,8 @@
 namespace App\Livewire\Gig;
 
 use App\Enums\GigStatus;
-use App\Models\{Favorite, Gig};
+use App\Models\Favorite;
+use App\Models\Gig;
 use App\Notifications\GigStatusUpdatedNotification;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Validate;
@@ -12,10 +13,12 @@ use Livewire\Component;
 class GigShow extends Component
 {
     public Gig $gig;
+
     public int $selectedPackageIndex = 0;
 
     #[Validate('required|string|min:10|max:500')]
     public string $rejectionReason = '';
+
     public bool $showRejectForm = false;
 
     public function mount(Gig $gig): void
@@ -38,15 +41,15 @@ class GigShow extends Component
         abort_unless($this->gig->status === GigStatus::Pending, 422);
 
         $this->gig->update([
-            'status'           => GigStatus::Published,
-            'published_at'     => now(),
+            'status' => GigStatus::Published,
+            'published_at' => now(),
             'rejection_reason' => null,
         ]);
 
         $this->gig->freelancer->notify(new GigStatusUpdatedNotification($this->gig->fresh()));
 
         session()->flash('success', 'Service approuvé et publié.');
-        $this->redirectRoute('dashboard.admin', navigate: true);
+        $this->redirectRoute('dashboard.admin', [], false, true);
     }
 
     public function rejectGig(): void
@@ -57,21 +60,22 @@ class GigShow extends Component
         $this->validateOnly('rejectionReason');
 
         $this->gig->update([
-            'status'           => GigStatus::Rejected,
-            'published_at'     => null,
+            'status' => GigStatus::Rejected,
+            'published_at' => null,
             'rejection_reason' => $this->rejectionReason,
         ]);
 
         $this->gig->freelancer->notify(new GigStatusUpdatedNotification($this->gig->fresh()));
 
         session()->flash('success', 'Service rejeté. Le freelance a été notifié.');
-        $this->redirectRoute('dashboard.admin', navigate: true);
+        $this->redirectRoute('dashboard.admin', [], false, true);
     }
 
     public function toggleFavorite(): void
     {
         if (! auth()->check()) {
             $this->redirectRoute('login');
+
             return;
         }
 
@@ -103,11 +107,10 @@ class GigShow extends Component
             ->get();
 
         return view('livewire.gig.gig-show', [
-            'gig'             => $this->gig,
+            'gig' => $this->gig,
             'selectedPackage' => $selectedPackage,
-            'similarGigs'     => $similarGigs,
-            'isFavorited'     => $this->isFavorited(),
+            'similarGigs' => $similarGigs,
+            'isFavorited' => $this->isFavorited(),
         ])->layout('layouts.afritask');
     }
 }
-

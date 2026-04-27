@@ -44,6 +44,8 @@ class GigEdit extends Component
 
     public ?string $videoUrl = null;
 
+    public ?string $successMessage = null;
+
     public mixed $thumbnailUpload = null;
 
     public array $newGalleryImages = [];
@@ -129,7 +131,8 @@ class GigEdit extends Component
             ->toArray();
         $this->gig->tags()->sync($tagIds);
 
-        session()->flash('success', 'Informations mises à jour.');
+        $this->successMessage = 'Informations mises à jour.';
+        $this->dispatch('scroll-top');
     }
 
     public function savePackages(): void
@@ -159,7 +162,8 @@ class GigEdit extends Component
             );
         }
 
-        session()->flash('success', 'Packages sauvegardés.');
+        $this->successMessage = 'Packages sauvegardés.';
+        $this->dispatch('scroll-top');
     }
 
     public function saveMedia(): void
@@ -208,7 +212,8 @@ class GigEdit extends Component
         $this->newGalleryVideos = [];
 
         $this->gig->refresh()->load('gallery');
-        session()->flash('success', 'Médias mis à jour.');
+        $this->successMessage = 'Médias mis à jour.';
+        $this->dispatch('scroll-top');
     }
 
     public function removeGalleryItem(int $galleryId): void
@@ -234,7 +239,7 @@ class GigEdit extends Component
         foreach ($admins as $admin) {
             $admin->notify(new GigSubmittedForReviewNotification($this->gig));
         }
-        session()->flash('success', 'Votre service a été soumis pour révision.');
+        $this->successMessage = 'Votre service a été soumis pour révision.';
     }
 
     public function render(): View

@@ -10,6 +10,7 @@ use App\Notifications\NewMessageNotification;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Str;
 use Livewire\Component;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
 
 class ConversationPage extends Component
@@ -20,7 +21,7 @@ class ConversationPage extends Component
 
     public string $newMessage = '';
 
-    /** @var \Livewire\Features\SupportFileUploads\TemporaryUploadedFile[] */
+    /** @var TemporaryUploadedFile[] */
     public array $attachments = [];
 
     public int $lastMessageId = 0;
@@ -45,12 +46,14 @@ class ConversationPage extends Component
             'attachments' => ['nullable', 'array', 'max:10'],
             'attachments.*' => [
                 'file',
-                'max:51200',
+                'max:716800',
                 'mimes:jpg,jpeg,png,gif,webp,mp4,mov,avi,webm,pdf,doc,docx,xls,xlsx,ppt,pptx,zip,rar',
             ],
         ]);
 
-        if (blank($this->newMessage) && empty($this->attachments)) {
+        $body = filled(trim($this->newMessage)) ? trim($this->newMessage) : null;
+
+        if (blank($body) && empty($this->attachments)) {
             return;
         }
 
@@ -68,33 +71,41 @@ class ConversationPage extends Component
         $message = Message::create([
             'conversation_id' => $this->conversation->id,
             'sender_id' => auth()->id(),
-            'body' => filled($this->newMessage) ? $this->newMessage : null,
+            'body' => $body,
             'attachments' => empty($storedAttachments) ? null : $storedAttachments,
         ]);
 
         $this->conversation->touch();
         $message->load(['sender', 'conversation.users']);
 
-        $bodyPreview = filled($this->newMessage)
-            ? Str::limit($this->newMessage, 100)
-            : count($storedAttachments) . ' fichier(s) joint(s)';
+        $bodyPreview = filled($body)
+            ? Str::limit($body, 100)
+            : count($storedAttachments).' fichier(s) joint(s)';
 
         $this->newMessage = '';
         $this->attachments = [];
         $this->lastMessageId = $message->id;
 
         $this->conversation->load('messages.sender');
-        broadcast(new MessageSent($message));
+        try {
+            broadcast(new MessageSent($message));
+        } catch (\Throwable) {
+            // Reverb server unavailable — message is saved, real-time push skipped
+        }
         $this->dispatch('message-sent');
 
         $recipients = $this->conversation->users->where('id', '!=', auth()->id());
         foreach ($recipients as $recipient) {
             $recipient->notify(new NewMessageNotification($message));
-            broadcast(new NotificationSent(
-                $recipient->id,
-                'Nouveau message de ' . auth()->user()->name,
-                $bodyPreview,
-            ));
+            try {
+                broadcast(new NotificationSent(
+                    $recipient->id,
+                    'Nouveau message de '.auth()->user()->name,
+                    $bodyPreview,
+                ));
+            } catch (\Throwable) {
+                // Reverb server unavailable — notification saved, real-time push skipped
+            }
         }
     }
 

@@ -6,6 +6,7 @@ use App\Enums\GigStatus;
 use App\Models\Category;
 use App\Models\Gig;
 use App\Models\Tag;
+use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -32,7 +33,7 @@ class GigCreate extends Component
 
     public function mount(): void
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = auth()->user();
         $profile = $user->freelancerProfile;
 
@@ -59,7 +60,7 @@ class GigCreate extends Component
             'categoryId' => ['required', 'integer', Rule::exists(Category::class, 'id')],
         ]);
 
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = auth()->user();
 
         $gig = Gig::query()->create([
@@ -92,7 +93,7 @@ class GigCreate extends Component
 
         session()->flash('success', 'Votre service a ete cree en brouillon. Vous pouvez maintenant le completer.');
 
-        $this->redirectRoute('seller.gigs.edit', ['gig' => $gig->id], navigate: true);
+        $this->redirectRoute('seller.gigs.edit', ['gig' => $gig->id], false, true);
     }
 
     /**
@@ -124,7 +125,7 @@ class GigCreate extends Component
             ->replaceMatches('/^je\s+/iu', '')
             ->replaceMatches('/^j[\'’]/iu', '');
 
-        return Str::limit('Je vais ' . Str::lower((string) $normalizedTagline), 255, '');
+        return Str::limit('Je vais '.Str::lower((string) $normalizedTagline), 255, '');
     }
 
     /**
@@ -134,9 +135,9 @@ class GigCreate extends Component
     private function suggestDescription(?string $tagline, array $skills, array $languages): string
     {
         $lines = collect([
-            $tagline ? 'Positionnement: ' . trim($tagline) . '.' : null,
-            $skills !== [] ? 'Competences clefs: ' . implode(', ', $skills) . '.' : null,
-            $languages !== [] ? 'Langues de travail: ' . implode(', ', $languages) . '.' : null,
+            $tagline ? 'Positionnement: '.trim($tagline).'.' : null,
+            $skills !== [] ? 'Competences clefs: '.implode(', ', $skills).'.' : null,
+            $languages !== [] ? 'Langues de travail: '.implode(', ', $languages).'.' : null,
             'Cette offre sera personnalisee selon le brief, les delais et les objectifs de votre projet.',
         ])->filter();
 
@@ -148,7 +149,7 @@ class GigCreate extends Component
      */
     private function guessCategoryId(string $tagline, array $skills): ?int
     {
-        $haystack = Str::lower(trim($tagline . ' ' . implode(' ', $skills)));
+        $haystack = Str::lower(trim($tagline.' '.implode(' ', $skills)));
 
         /** @var Collection<int, Category> $categories */
         $categories = Category::parents()->get();

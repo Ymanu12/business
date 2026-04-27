@@ -1,4 +1,6 @@
-<div class="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8" x-data="{ tab: 'info' }">
+<div class="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8"
+     x-data="{ tab: 'info' }"
+     x-on:scroll-top.window="window.scrollTo({ top: 0, behavior: 'smooth' })">
 
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
@@ -16,15 +18,15 @@
         </div>
     </div>
 
-    @if (session('success'))
-        <div class="mt-4 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">
-            {{ session('success') }}
+    @if ($successMessage)
+        <div class="mt-4 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950/30 dark:text-emerald-300">
+            ✓ {{ $successMessage }}
         </div>
     @endif
 
     {{-- Tabs --}}
     <div class="mt-6 flex gap-1 rounded-2xl border border-zinc-200 bg-stone-50 p-1 dark:bg-zinc-900 dark:border-zinc-700">
-        @foreach (['info' => 'Informations', 'packages' => 'Packages', 'media' => 'Médias', 'publish' => 'Publication'] as $key => $label)
+        @foreach (['info' => 'Informations', 'packages' => 'Packages', 'media' => 'Médias', 'lessons' => 'Leçons', 'quiz' => 'Quiz', 'publish' => 'Publication'] as $key => $label)
             <button @click="tab = '{{ $key }}'"
                     :class="tab === '{{ $key }}' ? 'bg-white shadow-sm text-zinc-950 font-semibold dark:bg-zinc-700 dark:text-white' : 'text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200'"
                     class="flex-1 rounded-xl px-4 py-2.5 text-sm transition">
@@ -308,6 +310,34 @@
                 </flux:button>
             </div>
         </form>
+    </div>
+
+    {{-- Tab : Leçons --}}
+    <div x-show="tab === 'lessons'" class="mt-6">
+        <div class="rounded-[2rem] border border-zinc-200/80 bg-white/90 p-6 shadow-xl shadow-zinc-900/5 backdrop-blur lg:p-8 dark:bg-zinc-800/90 dark:border-zinc-700/60">
+            <h2 class="text-xl font-black text-zinc-950 dark:text-white">Contenu pédagogique</h2>
+            <p class="mt-2 text-sm leading-7 text-zinc-500 dark:text-zinc-400">
+                Ajoutez les leçons de votre formation. Les clients y auront accès après paiement.
+                Vous pouvez marquer certaines leçons comme "Aperçu libre" pour donner un avant-goût.
+            </p>
+            <div class="mt-6">
+                <livewire:gig.lesson-manager :gig="$gig" />
+            </div>
+        </div>
+    </div>
+
+    {{-- Tab : Quiz --}}
+    <div x-show="tab === 'quiz'" class="mt-6">
+        <div class="rounded-[2rem] border border-zinc-200/80 bg-white/90 p-6 shadow-xl shadow-zinc-900/5 backdrop-blur lg:p-8 dark:bg-zinc-800/90 dark:border-zinc-700/60">
+            <h2 class="text-xl font-black text-zinc-950 dark:text-white">Quiz de fin de formation</h2>
+            <p class="mt-2 text-sm leading-7 text-zinc-500 dark:text-zinc-400">
+                Créez un quiz que les clients devront passer après avoir suivi vos leçons.
+                Les questions QCM sont corrigées automatiquement. Les questions texte nécessitent une correction manuelle.
+            </p>
+            <div class="mt-6">
+                <livewire:quiz.quiz-builder :gig="$gig" />
+            </div>
+        </div>
     </div>
 
     {{-- Tab : Publication --}}

@@ -12,7 +12,7 @@ class ClientDashboard extends Component
     public function mount(): void
     {
         if (! auth()->user()?->isClient()) {
-            $this->redirectRoute('dashboard', navigate: true);
+            $this->redirectRoute('dashboard', [], false, true);
         }
     }
 
@@ -34,15 +34,15 @@ class ClientDashboard extends Component
             ->get();
 
         $pendingDeliveries = $activeOrders->where('status', OrderStatus::Delivered)->count();
-        $escrowTotal       = $activeOrders->sum(fn ($o) => $o->escrow?->amount ?? 0);
-        $wallet            = $user->getOrCreateWallet();
+        $escrowTotal = $activeOrders->sum(fn ($o) => $o->escrow?->amount ?? 0);
+        $wallet = $user->getOrCreateWallet();
 
         return view('livewire.dashboard.client-dashboard', [
-            'activeOrders'      => $activeOrders,
+            'activeOrders' => $activeOrders,
             'activeOrdersCount' => $activeOrders->count(),
             'pendingDeliveries' => $pendingDeliveries,
-            'escrowTotal'       => $escrowTotal,
-            'wallet'            => $wallet,
+            'escrowTotal' => $escrowTotal,
+            'wallet' => $wallet,
         ])->layout('layouts.afritask');
     }
 }

@@ -127,7 +127,9 @@ test('conversation page sends messages', function () {
     Livewire::test(ConversationPage::class, ['conversation' => $conversation])
         ->set('newMessage', 'Bonjour, on peut echanger maintenant ?')
         ->call('sendMessage')
-        ->assertHasNoErrors();
+        ->assertHasNoErrors()
+        ->assertSet('newMessage', '')
+        ->assertSee('Bonjour, on peut echanger maintenant ?');
 
     $message = Message::query()->first();
 
@@ -135,6 +137,26 @@ test('conversation page sends messages', function () {
     expect($message->conversation_id)->toBe($conversation->id);
     expect($message->sender_id)->toBe($sender->id);
     expect($message->body)->toBe('Bonjour, on peut echanger maintenant ?');
+});
+
+test('conversation page trims messages before saving', function () {
+    $sender = User::factory()->create();
+    $recipient = User::factory()->create();
+
+    $conversation = Conversation::findOrCreateBetweenUsers($sender->id, $recipient->id);
+
+    $this->actingAs($sender);
+
+    Livewire::test(ConversationPage::class, ['conversation' => $conversation])
+        ->set('newMessage', '   Bonjour avec espaces   ')
+        ->call('sendMessage')
+        ->assertHasNoErrors()
+        ->assertSee('Bonjour avec espaces');
+
+    $message = Message::query()->latest('id')->first();
+
+    expect($message)->not->toBeNull();
+    expect($message->body)->toBe('Bonjour avec espaces');
 });
 
 test('message sent event broadcasts to the conversation and both participants', function () {

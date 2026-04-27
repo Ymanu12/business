@@ -16,13 +16,20 @@ use App\Livewire\Message\Inbox;
 use App\Livewire\Order\OrderCreate;
 use App\Livewire\Order\OrderList;
 use App\Livewire\Order\OrderShow;
+use App\Livewire\Course\CoursePage;
+use App\Livewire\Quiz\QuizResult;
+use App\Livewire\Quiz\QuizTake;
+use App\Livewire\Evaluation\CertificatePage;
+use App\Livewire\Evaluation\ClientEvaluationForm;
 use App\Livewire\Payment\Checkout;
+use App\Livewire\Payment\OrderReceipt;
 use App\Livewire\Payment\WalletDashboard;
 use App\Livewire\Payment\WithdrawalForm;
 use App\Livewire\Profile\FreelancerProfile;
 use App\Livewire\Review\ReviewForm;
 use App\Livewire\Search\SearchResults;
 use Illuminate\Notifications\DatabaseNotification;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', Homepage::class)->name('home');
@@ -33,7 +40,7 @@ Route::get('/categories/{category:slug}', CategoryPage::class)->name('categories
 
 Route::middleware('auth')->group(function () {
     Route::get('/notifications/{notification}', function (DatabaseNotification $notification) {
-        abort_unless((int) $notification->notifiable_id === (int) auth()->id(), 403);
+        abort_unless((int) $notification->notifiable_id === (int) Auth::id(), 403);
 
         if ($notification->read_at === null) {
             $notification->markAsRead();
@@ -43,7 +50,7 @@ Route::middleware('auth')->group(function () {
     })->name('notifications.open');
 
     Route::post('/notifications/read-all', function () {
-        auth()->user()?->unreadNotifications->markAsRead();
+        Auth::user()?->unreadNotifications->markAsRead();
 
         return back();
     })->name('notifications.read-all');
@@ -65,7 +72,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/{order:uuid}', OrderShow::class)->name('orders.show');
     Route::get('/gigs/{gig:slug}/commander', OrderCreate::class)->name('orders.create');
     Route::get('/orders/{order:uuid}/paiement', Checkout::class)->name('orders.checkout');
+    Route::get('/orders/{order:uuid}/recu', OrderReceipt::class)->name('orders.receipt');
+    Route::get('/orders/{order:uuid}/cours', CoursePage::class)->name('orders.course');
     Route::get('/orders/{order:uuid}/avis', ReviewForm::class)->name('reviews.create');
+    Route::get('/orders/{order:uuid}/evaluer-client', ClientEvaluationForm::class)->name('orders.evaluate-client');
+    Route::get('/orders/{order:uuid}/attestation', CertificatePage::class)->name('orders.certificate');
+    Route::get('/orders/{order:uuid}/quiz', QuizTake::class)->name('orders.quiz');
+    Route::get('/orders/{order:uuid}/quiz/resultats', QuizResult::class)->name('orders.quiz-result');
 
     Route::get('/wallet', WalletDashboard::class)->name('wallet');
     Route::get('/wallet/retrait', WithdrawalForm::class)->name('wallet.withdraw')->middleware('freelancer');

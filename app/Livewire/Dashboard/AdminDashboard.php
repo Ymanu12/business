@@ -19,7 +19,7 @@ class AdminDashboard extends Component
     public function mount(): void
     {
         if (! auth()->user()?->isAdmin()) {
-            $this->redirectRoute('dashboard', navigate: true);
+            $this->redirectRoute('dashboard', [], false, true);
 
             return;
         }

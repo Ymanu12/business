@@ -1,25 +1,3 @@
-<style>
-    emoji-picker {
-        --border-radius: 0.75rem;
-        --border-size: 1px;
-        --border-color: rgba(161,161,170,0.3);
-        --background: #ffffff;
-        --input-border-radius: 0.5rem;
-        --emoji-size: 1.4rem;
-        --num-columns: 8;
-        width: 320px;
-        height: 380px;
-    }
-    @media (prefers-color-scheme: dark) {
-        emoji-picker {
-            --background: #18181b;
-            --border-color: rgba(82,82,91,0.5);
-            --input-background: #27272a;
-            --text-color: #e4e4e7;
-            --button-hover-background: rgba(13,148,136,0.15);
-        }
-    }
-</style>
 <div
     class="flex flex-col"
     style="height: calc(100vh - 65px);"
@@ -57,13 +35,33 @@
             const el = $el;
             const scrollBottom = () => el.scrollTop = el.scrollHeight;
             scrollBottom();
+
+            const playNotif = () => {
+                try {
+                    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                    const o1 = ctx.createOscillator();
+                    const o2 = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    o1.connect(gain); o2.connect(gain); gain.connect(ctx.destination);
+                    o1.type = 'sine'; o1.frequency.setValueAtTime(880, ctx.currentTime);
+                    o1.frequency.exponentialRampToValueAtTime(1100, ctx.currentTime + 0.08);
+                    o2.type = 'sine'; o2.frequency.setValueAtTime(1320, ctx.currentTime + 0.08);
+                    gain.gain.setValueAtTime(0.18, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+                    o1.start(ctx.currentTime); o1.stop(ctx.currentTime + 0.08);
+                    o2.start(ctx.currentTime + 0.08); o2.stop(ctx.currentTime + 0.35);
+                } catch (e) {}
+            };
+
             $wire.on('message-sent', scrollBottom);
-            $wire.on('new-message-arrived', scrollBottom);
+            $wire.on('new-message-arrived', () => { scrollBottom(); playNotif(); });
+
             if (window.Echo) {
                 window.Echo.private(channelName)
-                    .listen('.message.sent', () => {
-                        $wire.refreshMessages();
-                    });
+                    .listen('.message.sent', () => { $wire.refreshMessages(); });
+            } else {
+                const poll = setInterval(() => $wire.refreshMessages(), 5000);
+                $watch('channelName', () => clearInterval(poll));
             }
         "
         x-on:livewire:navigating.window="window.Echo?.leave(channelName)"
@@ -88,7 +86,7 @@
 
             @foreach ($grouped as $date => $dayMessages)
                 {{-- Séparateur date --}}
-                <div class="my-4 flex items-center gap-3">
+                <div wire:key="message-day-{{ $date }}" class="my-4 flex items-center gap-3">
                     <div class="h-px flex-1 bg-zinc-200/70 dark:bg-zinc-700/70"></div>
                     <span class="rounded-full bg-zinc-100 px-3 py-1 text-[10px] font-semibold text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
                         {{ \Carbon\Carbon::parse($date)->isToday() ? "Aujourd'hui" : (\Carbon\Carbon::parse($date)->isYesterday() ? 'Hier' : \Carbon\Carbon::parse($date)->translatedFormat('d M Y')) }}
@@ -99,7 +97,7 @@
                 @foreach ($dayMessages as $msg)
                     @php $isMe = $msg->sender_id === auth()->id(); @endphp
 
-                    <div class="mb-1 flex {{ $isMe ? 'justify-end' : 'justify-start' }} items-end gap-2">
+                    <div wire:key="message-{{ $msg->id }}" class="mb-1 flex {{ $isMe ? 'justify-end' : 'justify-start' }} items-end gap-2">
                         {{-- Avatar de l'autre côté --}}
                         @if (!$isMe)
                             <img src="{{ $msg->sender?->avatarUrl() }}" alt=""
@@ -240,6 +238,7 @@
 
         <form
             wire:submit.prevent="sendMessage"
+            x-ref="messageForm"
             class="flex items-end gap-2"
             x-data="{
                 emojiOpen: false,
@@ -283,7 +282,7 @@
                     placeholder="Votre message…"
                     class="max-h-32 min-h-[24px] w-full resize-none bg-transparent text-sm text-zinc-800 outline-none placeholder:text-zinc-400 dark:text-zinc-200 dark:placeholder:text-zinc-500"
                     x-on:input="$el.style.height = 'auto'; $el.style.height = Math.min($el.scrollHeight, 128) + 'px'"
-                    x-on:keydown.enter.prevent.stop="if (!$event.shiftKey) { $wire.sendMessage() }"
+                    x-on:keydown.enter.prevent.stop="if (!$event.shiftKey) { $refs.messageForm.requestSubmit() }"
                 ></textarea>
 
                 {{-- Bouton émoji --}}
@@ -310,6 +309,17 @@
                 >
                     <emoji-picker
                         x-on:emoji-click="insertEmoji($event.detail.unicode)"
+                        style="
+                            --border-radius: 0.75rem;
+                            --border-size: 1px;
+                            --border-color: rgba(161,161,170,0.3);
+                            --background: #ffffff;
+                            --input-border-radius: 0.5rem;
+                            --emoji-size: 1.4rem;
+                            --num-columns: 8;
+                            width: 320px;
+                            height: 380px;
+                        "
                         class="shadow-xl"
                     ></emoji-picker>
                 </div>

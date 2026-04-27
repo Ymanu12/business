@@ -28,7 +28,7 @@ class FreelancerProfile extends Component
 
         $conversation = Conversation::findOrCreateBetweenUsers($authUser->id, $this->user->id);
 
-        $this->redirectRoute('inbox.show', $conversation->id, navigate: true);
+        $this->redirectRoute('inbox.show', ['conversation' => $conversation->id], false, true);
     }
 
     public function render(): View

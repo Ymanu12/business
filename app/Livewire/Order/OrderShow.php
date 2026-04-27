@@ -2,8 +2,7 @@
 
 namespace App\Livewire\Order;
 
-use App\Models\Conversation;
-use App\Models\Order;
+use App\Models\{Conversation, LessonProgress, Order};
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
@@ -16,7 +15,8 @@ class OrderShow extends Component
         abort_unless($order->isOwnedBy(auth()->user()), 403);
 
         $this->order = $order->load([
-            'gig',
+            'gig.lessons',
+            'gig.quiz',
             'client',
             'freelancer',
             'package',
@@ -24,6 +24,8 @@ class OrderShow extends Component
             'messages',
             'review',
             'escrow',
+            'payment',
+            'clientEvaluation',
         ]);
     }
 
@@ -36,11 +38,29 @@ class OrderShow extends Component
 
         $conversation = Conversation::findOrCreateBetweenUsers($authUser->id, $otherId);
 
-        $this->redirectRoute('inbox.show', $conversation->id, navigate: true);
+        $this->redirectRoute('inbox.show', ['conversation' => $conversation->id], false, true);
     }
 
     public function render(): View
     {
-        return view('livewire.order.order-show', ['order' => $this->order])->layout('layouts.afritask');
+        $lessons     = $this->order->gig?->lessons ?? collect();
+        $lessonIds   = $lessons->pluck('id');
+
+        $completedIds = LessonProgress::where('user_id', $this->order->client_id)
+            ->whereIn('lesson_id', $lessonIds)
+            ->whereNotNull('completed_at')
+            ->pluck('lesson_id')
+            ->toArray();
+
+        $progressPct = $lessons->count()
+            ? (int) (count($completedIds) / $lessons->count() * 100)
+            : 0;
+
+        return view('livewire.order.order-show', [
+            'order'        => $this->order,
+            'lessons'      => $lessons,
+            'completedIds' => $completedIds,
+            'progressPct'  => $progressPct,
+        ])->layout('layouts.afritask');
     }
 }

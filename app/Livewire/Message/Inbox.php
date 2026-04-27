@@ -25,7 +25,7 @@ class Inbox extends Component
 
         $conversation = Conversation::findOrCreateBetweenUsers($authUser->id, $targetUser->id);
 
-        $this->redirectRoute('inbox.show', $conversation->id, navigate: true);
+        $this->redirectRoute('inbox.show', ['conversation' => $conversation->id], false, true);
     }
 
     public function render(): View
